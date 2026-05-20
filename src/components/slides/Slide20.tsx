@@ -45,8 +45,9 @@ export default function Slide20() {
             Q&amp;A
           </h1>
           <p className="text-base text-white/55 tracking-wide max-w-lg leading-relaxed">
+            {/* TODO: クロージングメッセージ */}
             ご質問・ディスカッションを歓迎します。<br />
-            あなたの実務での課題を、Orbit がどう解決できるか一緒に考えましょう。
+            実務での課題を、一緒に考えましょう。
           </p>
         </motion.div>
 
@@ -65,9 +66,10 @@ export default function Slide20() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 1.0 }}
         >
-          <ContactBlock label="Web"      value="orbit.legal" accent="#c8a8ff" />
-          <ContactBlock label="Email"    value="hello@orbit.legal" accent="#88bbff" />
-          <ContactBlock label="Twitter"  value="@orbit_legal" accent="#ffaacc" />
+          {/* TODO: 連絡先 / SNS / Web を書き換え */}
+          <ContactBlock label="Web"      value="example.com"        accent="#c8a8ff" />
+          <ContactBlock label="Email"    value="hello@example.com"  accent="#88bbff" />
+          <ContactBlock label="Twitter"  value="@your_handle"       accent="#ffaacc" />
         </motion.div>
 
         {/* Tiny "thank you" */}

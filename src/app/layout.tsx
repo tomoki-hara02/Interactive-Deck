@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orbit — Legal × AI",
-  description: "The future of legal and AI",
+  title: "Interactive Deck — Template",
+  description: "Reusable interactive presentation template",
 };
 
 export default function RootLayout({

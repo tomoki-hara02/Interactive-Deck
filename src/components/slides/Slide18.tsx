@@ -11,12 +11,13 @@ type Row = {
   accent: string;
 };
 
+// TODO: 計測タスク名と値（%）を書き換えてください
 const ROWS: Row[] = [
-  { label: 'NDA レビュー',    value: 94, unit: '%', accent: '#88bbff' },
-  { label: '契約条項抽出',     value: 91, unit: '%', accent: '#c8a8ff' },
-  { label: '判例引用の正確性', value: 88, unit: '%', accent: '#ffaacc' },
-  { label: 'コンプラ違反検知', value: 82, unit: '%', accent: '#9ee0a8' },
-  { label: '個人情報リスク',   value: 76, unit: '%', accent: '#f7c46c' },
+  { label: 'タスク A', value: 94, unit: '%', accent: '#88bbff' },
+  { label: 'タスク B', value: 91, unit: '%', accent: '#c8a8ff' },
+  { label: 'タスク C', value: 88, unit: '%', accent: '#ffaacc' },
+  { label: 'タスク D', value: 82, unit: '%', accent: '#9ee0a8' },
+  { label: 'タスク E', value: 76, unit: '%', accent: '#f7c46c' },
 ];
 
 function useCountUp(target: number, ms: number, start: boolean) {
@@ -103,6 +104,7 @@ export default function Slide18() {
             Benchmark Accuracy
           </span>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+            {/* TODO: ベンチマークのタイトル */}
             タスク別の精度ベンチマーク
           </h2>
         </div>
@@ -114,9 +116,11 @@ export default function Slide18() {
         </div>
 
         <div className="flex items-center justify-between pt-6 border-t border-white/8 text-xs text-white/40">
-          <span>n = 1,000 サンプル / domain experts による評価</span>
+          {/* TODO: 評価条件・サンプル数などの注釈 */}
+          <span>n = 1,000 / 評価条件をここに記述</span>
           <span className="text-[10px] tracking-widest uppercase text-white/30">
-            v1.2 · 2026Q1
+            {/* TODO: バージョン・期間 */}
+            v0.1 · 20XX
           </span>
         </div>
       </motion.div>

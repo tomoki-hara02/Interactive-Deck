@@ -11,23 +11,24 @@ type Feature = {
   accent: string;
 };
 
+// TODO: 3 つのカード（特徴・機能・柱）を書き換えてください
 const FEATURES: Feature[] = [
   {
     badge: '01',
-    title: 'Clause Extraction',
-    desc: '契約書から条項を自動分解。タイプ別に分類しベクトル化することで、横断検索の基盤を作る。',
+    title: 'Feature One',
+    desc: '1 つ目の特徴を 1〜2 文で簡潔に。クリックで前面に来るとアクセント色で強調されます。',
     accent: '#c8a8ff',
   },
   {
     badge: '02',
-    title: 'Risk Scoring',
-    desc: '条項ごとに法的リスクをスコアリング。閾値を超える項目を強調し、レビュアーの注意を導く。',
+    title: 'Feature Two',
+    desc: '2 つ目の特徴。中央のカードは最初からアクティブ状態になっています。',
     accent: '#88bbff',
   },
   {
     badge: '03',
-    title: 'Cross-Reference',
-    desc: '関連法令・判例を自動参照。AI が出典付きで根拠を提示することで、判断の透明性を担保する。',
+    title: 'Feature Three',
+    desc: '3 つ目の特徴。3 枚で 1 セットの「柱」を作るとバランスが良いです。',
     accent: '#ffaacc',
   },
 ];
@@ -42,10 +43,11 @@ type Slot = {
   opacity: number;
 };
 
+// 中央カードを少しだけ持ち上げる（タイトルと被らないよう、原案より控えめ）
 const SLOTS: Slot[] = [
-  { x: -210, y: -30,  rotZ: -10, scale: 0.88, z: 1, opacity: 0.7 },  // left
-  { x: 0,    y: -80,  rotZ: 0,   scale: 1.0,  z: 3, opacity: 1.0 },  // center (active)
-  { x: 210,  y: -10,  rotZ: 10,  scale: 0.88, z: 2, opacity: 0.7 },  // right
+  { x: -210, y: 30, rotZ: -10, scale: 0.88, z: 1, opacity: 0.7 },  // left
+  { x: 0,    y: -20, rotZ: 0,  scale: 1.0,  z: 3, opacity: 1.0 },  // center (active)
+  { x: 210,  y: 50, rotZ: 10,  scale: 0.88, z: 2, opacity: 0.7 },  // right
 ];
 
 // Map card → slot based on selection
@@ -120,7 +122,7 @@ function TiltCard({
         animate={{ rotateZ: slot.rotZ }}
       >
         <div
-          className="w-72 h-96 rounded-2xl border backdrop-blur-xl p-7 flex flex-col justify-between transition-colors duration-300 relative overflow-hidden"
+          className="w-64 md:w-72 h-80 md:h-96 rounded-2xl border backdrop-blur-xl p-6 md:p-7 flex flex-col justify-between transition-colors duration-300 relative overflow-hidden"
           style={{
             borderColor: isActive
               ? `${feature.accent}55`
@@ -230,26 +232,26 @@ export default function Slide10() {
   return (
     <SlideWrapper>
       <motion.div
-        className="flex flex-col items-center gap-10 w-full"
+        className="flex flex-col items-center gap-8 md:gap-12 w-full max-h-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: 'easeInOut' }}
       >
         {/* Header */}
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-2 text-center shrink-0">
           <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
             Core Capabilities
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            Orbit を支える 3 つのエンジン
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+            プロダクトを支える 3 つの柱
           </h2>
         </div>
 
-        {/* 3D stage */}
+        {/* 3D stage — 画面高さで縮小 */}
         <div
           ref={stageRef}
-          className="relative w-full max-w-4xl h-[28rem] flex items-center justify-center"
-          style={{ perspective: 1400 }}
+          className="relative w-full max-w-4xl h-[22rem] md:h-[26rem] flex items-center justify-center shrink-0"
+          style={{ perspective: 1400, maxHeight: '60vh' }}
           onMouseMove={onMove}
           onMouseLeave={onLeave}
         >
@@ -294,7 +296,7 @@ export default function Slide10() {
           ))}
         </div>
 
-        <p className="text-xs text-white/30 tracking-wide -mt-4">
+        <p className="text-[11px] md:text-xs text-white/30 tracking-wide -mt-4 shrink-0">
           カードをクリックして切り替え · カーソルで視差
         </p>
       </motion.div>

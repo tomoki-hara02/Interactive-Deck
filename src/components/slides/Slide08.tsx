@@ -4,14 +4,16 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
-const PROMPT = '第30条の4は、AIモデルの学習目的での著作物利用を許容しますか？';
+// TODO: デモ用の質問文を書き換えてください
+const PROMPT = 'ここにユーザーからの質問文を入れます。AI が答える想定の問いを置いてください。';
 
-// Stream tokens — emulates an LLM streaming response token-by-token
+// TODO: 回答をトークン単位（短い断片）で書き換え。'\n' で改行されます。
+// 短いトークンに分割するほど、タイプライター感が増します。
 const TOKENS = [
-  'はい、', '原則として', '許容', 'されます。', '\n\n',
-  '第30条の4', 'は、', '「思想又は感情の', '享受を', '目的としない」', '利用を', '広く', '認める', '規定であり、', '\n',
-  '同条', '第二号', 'は', '「情報解析の用に供する場合」', 'を', '具体例', 'として', '明示的に', '列挙しています。', '\n\n',
-  'ただし、', 'ただし書により、', '「著作権者の利益を', '不当に害する場合」', 'は', '適用除外', 'となります。',
+  'はい、', 'お答えします。', '\n\n',
+  '回答の', '第 1 段落を', 'ここに', '配置します。', '\n',
+  'ストリーミング風に', 'トークンが', '一つずつ', '表示されます。', '\n\n',
+  '補足や', '注意事項などを', '最後の', '段落に', '記述します。',
 ];
 
 const TOKEN_MS = 60;
@@ -83,7 +85,8 @@ export default function Slide08() {
             Live Inference
           </span>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-            Orbit に聞いてみる
+            {/* TODO: セクション見出し */}
+            AI に聞いてみる
           </h2>
         </div>
 
@@ -120,7 +123,8 @@ export default function Slide08() {
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-[#7B5EA7] via-[#4F8EF7] to-[#FF6B9D]" />
                 <span className="text-[10px] tracking-[0.18em] uppercase text-white/30">
-                  Orbit
+                  {/* TODO: AI 側の話者ラベル */}
+                  Assistant
                 </span>
               </div>
 
@@ -132,7 +136,8 @@ export default function Slide08() {
                   <div className="flex items-center gap-3">
                     <ThinkingDots />
                     <span className="text-xs text-white/40 tracking-wider">
-                      Analyzing 著作権法 §30 …
+                      {/* TODO: 思考中ステータス文 */}
+                      Analyzing context …
                     </span>
                   </div>
                 )}
@@ -154,10 +159,10 @@ export default function Slide08() {
           )}
         </AnimatePresence>
 
-        {/* Footer */}
+        {/* Footer — TODO: モデル名やデータソースの注釈 */}
         <div className="flex items-center gap-2 text-[10px] text-white/25 tracking-widest">
           <span className="w-1 h-1 rounded-full bg-emerald-400/70" />
-          Orbit-1.2 · grounded on JP-Legal-Corpus
+          Model · grounded on your dataset
         </div>
       </motion.div>
     </SlideWrapper>

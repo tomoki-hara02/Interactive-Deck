@@ -12,33 +12,38 @@ type Player = {
   isUs?: boolean;
 };
 
+// TODO: 競合マップに置くプレイヤーを書き換え
+// x = 横軸 (0-100), y = 縦軸 (0-100), isUs: true は自プロダクト用の強調表示
 const PLAYERS: Player[] = [
-  { name: '従来の法務SaaS', x: 28, y: 35, size: 9,  color: '#7a8aa6' },
-  { name: '汎用 LLM',       x: 80, y: 32, size: 10, color: '#7a8aa6' },
-  { name: '専門家マニュアル', x: 18, y: 78, size: 9,  color: '#7a8aa6' },
-  { name: 'Orbit',           x: 82, y: 84, size: 22, color: '#88bbff', isUs: true },
+  { name: 'Competitor A', x: 28, y: 35, size: 9,  color: '#7a8aa6' },
+  { name: 'Competitor B', x: 80, y: 32, size: 10, color: '#7a8aa6' },
+  { name: 'Alternative',  x: 18, y: 78, size: 9,  color: '#7a8aa6' },
+  { name: 'Our Solution', x: 82, y: 84, size: 22, color: '#88bbff', isUs: true },
 ];
 
 export default function Slide13() {
   return (
     <SlideWrapper>
       <motion.div
-        className="flex flex-col items-center gap-8 w-full max-w-5xl"
+        className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-5xl max-h-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: 'easeInOut' }}
       >
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-2 text-center shrink-0">
           <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
-            Market Position
+            Positioning
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            速度と精度の交差点に立つ
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+            2 軸が交差するところに立つ
           </h2>
         </div>
 
-        {/* Matrix container */}
-        <div className="relative w-full max-w-3xl aspect-[1.3] mt-4">
+        {/* Matrix container — 画面高さで縮小 */}
+        <div
+          className="relative w-full max-w-3xl aspect-[1.3] mt-2"
+          style={{ maxHeight: 'min(58vh, 480px)' }}
+        >
           {/* Quadrant background */}
           <div className="absolute inset-0 rounded-2xl border border-white/10 overflow-hidden">
             {/* Subtle quadrant gradients */}
@@ -102,10 +107,10 @@ export default function Slide13() {
             ))}
           </div>
 
-          {/* Axis labels */}
+          {/* Axis labels — TODO: 2 軸の名前 */}
           <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2">
             <span className="text-[10px] tracking-[0.22em] uppercase text-white/40">
-              Speed
+              Axis X
             </span>
             <svg width="40" height="6" viewBox="0 0 40 6">
               <path d="M0 3h36m-4-3l4 3-4 3" stroke="rgba(255,255,255,0.4)" strokeWidth="1" fill="none" />
@@ -113,7 +118,7 @@ export default function Slide13() {
           </div>
           <div className="absolute top-1/2 -left-12 -translate-y-1/2 -rotate-90 flex items-center gap-2 origin-center">
             <span className="text-[10px] tracking-[0.22em] uppercase text-white/40">
-              Accuracy
+              Axis Y
             </span>
             <svg width="40" height="6" viewBox="0 0 40 6">
               <path d="M0 3h36m-4-3l4 3-4 3" stroke="rgba(255,255,255,0.4)" strokeWidth="1" fill="none" />
@@ -126,8 +131,8 @@ export default function Slide13() {
           </span>
         </div>
 
-        <p className="text-xs text-white/30 tracking-wide mt-4">
-          Orbit は「速さ」と「精度」を両立する唯一のレイヤー
+        <p className="text-[11px] md:text-xs text-white/30 tracking-wide mt-2 shrink-0">
+          2 つの軸を両立できる唯一のポジション
         </p>
       </motion.div>
     </SlideWrapper>

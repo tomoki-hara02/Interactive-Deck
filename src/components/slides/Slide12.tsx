@@ -3,20 +3,21 @@
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
+// TODO: Before / After 各 5 項目を書き換えてください
 const BEFORE = [
-  { label: '紙のファイル数百冊を物理探索' },
-  { label: '条文検索に数十分〜数時間' },
-  { label: '担当弁護士の経験に大きく依存' },
-  { label: '関連判例は記憶か手作業の照合' },
-  { label: '夜遅くまでドラフトをレビュー' },
+  { label: '従来の課題 1' },
+  { label: '従来の課題 2' },
+  { label: '従来の課題 3' },
+  { label: '従来の課題 4' },
+  { label: '従来の課題 5' },
 ];
 
 const AFTER = [
-  { label: '全社の文書を即時セマンティック検索' },
-  { label: '関連条文を 1 秒未満で抽出' },
-  { label: '判断根拠と引用が常に明示される' },
-  { label: '判例・ガイドラインを横断推論' },
-  { label: '初次レビューを AI が下書き' },
+  { label: '導入後の改善 1' },
+  { label: '導入後の改善 2' },
+  { label: '導入後の改善 3' },
+  { label: '導入後の改善 4' },
+  { label: '導入後の改善 5' },
 ];
 
 const ROW_DELAY = 0.12;
@@ -36,7 +37,8 @@ export default function Slide12() {
             Before / After
           </span>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            実務はこう変わる
+            {/* TODO: Before/After のセクション見出し */}
+            こう変わる
           </h2>
         </div>
 
@@ -95,7 +97,8 @@ export default function Slide12() {
               <path d="M6 22h32M28 12l10 10-10 10" stroke="url(#arr12)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </motion.svg>
             <span className="text-[10px] tracking-[0.25em] uppercase text-white/30">
-              with Orbit
+              {/* TODO: 矢印下の小ラベル（例：with [Product]） */}
+              with our solution
             </span>
           </motion.div>
 
@@ -114,7 +117,8 @@ export default function Slide12() {
               </span>
             </div>
             <h3 className="text-2xl font-bold text-white tracking-tight">
-              Orbit-powered Workflow
+              {/* TODO: 改善後のワークフロー名 */}
+              New Workflow
             </h3>
 
             <ul className="flex flex-col gap-3 mt-2">

@@ -12,42 +12,44 @@ type Event = {
   highlight?: boolean;
 };
 
+// TODO: 6 つの年表イベントを書き換えてください
+// highlight: true を付けたイベントには "Pivotal" バッジが付きます
 const EVENTS: Event[] = [
   {
-    year: '1899',
-    title: '旧著作権法 制定',
-    desc: 'ベルヌ条約加盟を契機に整備',
+    year: '20XX',
+    title: 'イベント 1',
+    desc: '最も古い出来事の説明をここに',
     accent: '#88bbff',
   },
   {
-    year: '1970',
-    title: '現行 著作権法 全面改正',
-    desc: '権利の体系と例外規定を再構築',
+    year: '20XX',
+    title: 'イベント 2',
+    desc: '2 つ目の出来事の説明',
     accent: '#88bbff',
   },
   {
-    year: '2003',
-    title: '個人情報保護法 制定',
-    desc: '個人データ取扱いの基本法',
+    year: '20XX',
+    title: 'イベント 3',
+    desc: '3 つ目の出来事の説明',
     accent: '#c8a8ff',
   },
   {
-    year: '2018',
-    title: '柔軟な権利制限規定の整備',
-    desc: '§30の4 など AI 学習に道筋',
+    year: '20XX',
+    title: 'イベント 4',
+    desc: '4 つ目の出来事の説明',
     accent: '#c8a8ff',
   },
   {
-    year: '2023',
-    title: '生成 AI 議論の本格化',
-    desc: '文化庁が AI と著作権の整理を開始',
+    year: '20XX',
+    title: 'イベント 5（重要）',
+    desc: '転換点となる出来事',
     accent: '#ffaacc',
     highlight: true,
   },
   {
-    year: '2026',
-    title: 'Orbit — 法律 × AI 実装段階へ',
-    desc: '実務に AI が常駐する時代へ',
+    year: '今日',
+    title: 'イベント 6（現在地）',
+    desc: '現在の到達点・今日のテーマ',
     accent: '#ffffff',
     highlight: true,
   },
@@ -69,7 +71,8 @@ export default function Slide11() {
             Timeline
           </span>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            日本の法律 × AI の歩み
+            {/* TODO: 年表のタイトル */}
+            これまでの歩み
           </h2>
         </div>
 
@@ -91,7 +94,7 @@ export default function Slide11() {
               const isPast = i < active;
               return (
                 <button
-                  key={ev.year}
+                  key={i}
                   onClick={(e) => {
                     e.stopPropagation();
                     setActive(i);

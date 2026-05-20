@@ -4,8 +4,14 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
-const TEXTS = ['LEGAL', 'AI', 'ORBIT'];
-const HOLD_MS = 2800; // hold each text before morphing
+// TODO: 上段→中段→下段で順に表示するキーワード（短い英単語が映えます）
+//   yRatio = 0 (画面最上端) 〜 1 (画面最下端) の比率で各テキストの中心を指定
+const STAGES = [
+  { text: 'HELLO', yRatio: 0.30 },
+  { text: 'WORLD', yRatio: 0.50 },
+  { text: 'DEMO',  yRatio: 0.70 },
+];
+const HOLD_MS = 2600; // hold each stage before morphing
 const PALETTE = ['#c8a8ff', '#88bbff', '#ffaacc', '#ffffff'];
 
 type Particle = {
@@ -18,28 +24,46 @@ type Particle = {
   color: string;
 };
 
-// ─── Sample target pixels for a text string ─────────────────────────────────
-function sampleText(text: string, w: number, h: number, step: number): { x: number; y: number }[] {
+// ─── Sample target pixels for a text at a given y center ────────────────────
+function sampleText(
+  text: string,
+  w: number,
+  h: number,
+  yCenter: number,
+  step: number
+): { x: number; y: number }[] {
   const off = document.createElement('canvas');
   off.width = w;
   off.height = h;
   const ctx = off.getContext('2d');
   if (!ctx) return [];
 
-  // Auto-fit font size so text spans ~70% of the smaller dimension
-  const target = Math.min(w, h) * 0.72;
-  // Start big, scale down until it fits horizontally
-  let size = Math.floor(target);
-  ctx.font = `900 ${size}px Inter, sans-serif`;
-  let measured = ctx.measureText(text).width;
-  if (measured > w * 0.85) {
-    size = Math.floor(size * (w * 0.85) / measured);
-    ctx.font = `900 ${size}px Inter, sans-serif`;
+  // 3 段に振り分けるので、テキスト 1 つ分の高さは画面の 22% 以下に抑える。
+  // これで Inter が無いブラウザでフォールバックフォントになっても切れない安全マージン。
+  const maxW = w * 0.82;
+  const maxH = h * 0.22;
+  const fontStr = (px: number) => `900 ${px}px sans-serif`;
+
+  let size = Math.floor(maxH);
+  ctx.font = fontStr(size);
+  let m = ctx.measureText(text);
+  if (m.width > maxW) {
+    size = Math.floor(size * maxW / m.width);
+    ctx.font = fontStr(size);
+    m = ctx.measureText(text);
   }
+
+  // actualBoundingBox は文字の視覚的な上下端を返す（em-box ではなく実描画範囲）。
+  // ブラウザによって太字ストロークが小数ピクセル分はみ出るので 5% の安全余白を足す。
+  const ascent  = m.actualBoundingBoxAscent  ?? size * 0.78;
+  const descent = (m.actualBoundingBoxDescent ?? size * 0.22) + size * 0.05;
+  // 視覚的中心を指定された yCenter に合わせるためのアルファベットベースライン位置
+  const yBaseline = yCenter + (ascent - descent) / 2;
+
   ctx.fillStyle = 'white';
   ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, w / 2, h / 2);
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText(text, w / 2, yBaseline);
 
   const data = ctx.getImageData(0, 0, w, h).data;
   const out: { x: number; y: number }[] = [];
@@ -71,14 +95,16 @@ export default function Slide09() {
     canvas.style.height = `${h}px`;
     ctx.scale(dpr, dpr);
 
-    // Resolve targets for each text
-    const STEP = 5;
-    const allTargets = TEXTS.map((t) => sampleText(t, w, h, STEP));
+    // 各段のテキストを別の y 位置でサンプリング
+    const STEP = 4;
+    const allTargets = STAGES.map((s) =>
+      sampleText(s.text, w, h, h * s.yRatio, STEP)
+    );
 
-    // Cap particle count at the largest target set
-    const maxN = Math.min(Math.max(...allTargets.map((a) => a.length)), 3000);
+    // 全段中の最大ピクセル数を母数にする（密度をなるべく均一に保つため上限あり）
+    const maxN = Math.min(Math.max(...allTargets.map((a) => a.length)), 3200);
 
-    // Initial particles — random positions across screen
+    // 初期: 画面全体に散らばる
     const particles: Particle[] = Array.from({ length: maxN }, () => ({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -89,9 +115,9 @@ export default function Slide09() {
       color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
     }));
 
-    // Assign targets for given text index
-    function assign(textIdx: number) {
-      const t = allTargets[textIdx];
+    // 各段の目標位置を粒子に割り当てる
+    function assign(stageIdx: number) {
+      const t = allTargets[stageIdx];
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         const tgt = t[i % t.length];
@@ -100,12 +126,12 @@ export default function Slide09() {
       }
     }
 
-    let textIdx = 0;
-    assign(textIdx);
+    let stageIdx = 0;
+    assign(stageIdx);
 
     const swap = setInterval(() => {
-      textIdx = (textIdx + 1) % TEXTS.length;
-      assign(textIdx);
+      stageIdx = (stageIdx + 1) % STAGES.length;
+      assign(stageIdx);
     }, HOLD_MS);
 
     let raf = 0;
@@ -115,7 +141,7 @@ export default function Slide09() {
       const dt = Math.min((now - lastT) / 16.667, 2); // capped frame delta
       lastT = now;
 
-      // Trailing fade instead of full clear → smooth motion blur feel
+      // Trailing fade for motion blur feel
       ctx.fillStyle = 'rgba(10,10,15,0.22)';
       ctx.fillRect(0, 0, w, h);
 
@@ -155,9 +181,9 @@ export default function Slide09() {
         style={{ background: '#0a0a0f' }}
       />
 
-      {/* Overlay text on top */}
+      {/* Overlay caption — 画面下端に固定（粒子の最下段との距離は yRatio=0.70 で確保済み） */}
       <motion.div
-        className="relative z-10 flex flex-col items-center gap-3 mt-auto mb-16 pointer-events-none"
+        className="relative z-10 flex flex-col items-center gap-2 mt-auto mb-10 pointer-events-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
@@ -166,7 +192,7 @@ export default function Slide09() {
           Particle Field × Typography
         </span>
         <p className="text-xs text-white/30 tracking-widest">
-          散らばった粒子が、意味あるカタチへと収束していく
+          上から下へ、形と位置を変えながら粒子が流れる
         </p>
       </motion.div>
     </SlideWrapper>

@@ -3,18 +3,19 @@
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
-// Fake but plausible legal-tech / partner brand names
+// TODO: 顧客・パートナー・引用先などのロゴ風テキストを書き換えてください
+// 3 行に分けてそれぞれ別方向にスクロールします
 const ROW_1 = [
-  'NIPPON LEGAL', '△ Sakura.law', '◆ Lexis Studio', '○ Vermillion Bar',
-  'Hosokawa & Co.', '⬡ NextField', '⌬ Atelier Juris', '☷ Sigma Partners',
+  '◇ Company A', '△ Company B', '◆ Company C', '○ Company D',
+  '◎ Company E', '⬡ Company F', '⌬ Company G', '☷ Company H',
 ];
 const ROW_2 = [
-  '◉ MidoriTech', '✦ Asahi Counsel', '⌖ ZENITH IP', '◐ Habanero Law',
-  '⊛ Plasma Audit', '✿ Wisteria LLP', '∎ Inkwell Notary', '✺ Orca Compliance',
+  '◉ Partner A', '✦ Partner B', '⌖ Partner C', '◐ Partner D',
+  '⊛ Partner E', '✿ Partner F', '∎ Partner G', '✺ Partner H',
 ];
 const ROW_3 = [
-  'GIN.legal', '✕ Tenpura Bench', '◈ Lumen Office', '✻ NorthPole IP',
-  '⊕ Kabuki Mark', '◊ Cipher Law', '☄ Tsubaki Pro', '☉ Solstice Law',
+  '◇ Client A', '✕ Client B', '◈ Client C', '✻ Client D',
+  '⊕ Client E', '◊ Client F', '☄ Client G', '☉ Client H',
 ];
 
 function Row({
@@ -67,7 +68,8 @@ export default function Slide16() {
             Trusted by
           </span>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-            次世代の法務チームに選ばれて
+            {/* TODO: 信頼の証セクションの見出し */}
+            多くのチームに選ばれて
           </h2>
         </div>
 
@@ -78,11 +80,11 @@ export default function Slide16() {
           <Row items={ROW_3} direction="left"  durationS={52} />
         </div>
 
-        {/* Stat band */}
+        {/* Stat band — TODO: 数値と単位ラベルを書き換え */}
         <div className="grid grid-cols-3 gap-6 mt-6 pt-8 border-t border-white/8">
-          <Stat n="500+" label="導入チーム" />
-          <Stat n="32"   label="提携法律事務所" />
-          <Stat n="3M+"  label="月次クエリ" />
+          <Stat n="000+" label="数値ラベル 1" />
+          <Stat n="00"   label="数値ラベル 2" />
+          <Stat n="0M+"  label="数値ラベル 3" />
         </div>
       </motion.div>
     </SlideWrapper>

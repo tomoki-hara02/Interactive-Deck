@@ -14,9 +14,11 @@ export default function Slide03() {
       >
         <div className="flex flex-col items-center gap-4">
           <span className="text-sm font-medium tracking-[0.2em] text-white/40 uppercase">
-            Ready to transform your legal workflow?
+            {/* TODO: 前置きの一行 */}
+            Ready to begin?
           </span>
           <h2 className="text-6xl md:text-7xl font-bold tracking-tight text-white">
+            {/* TODO: 行動を促す大見出し */}
             Let&apos;s get started
           </h2>
         </div>
@@ -27,11 +29,13 @@ export default function Slide03() {
           whileTap={{ scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          Request Early Access
+          {/* TODO: CTA のラベル */}
+          Primary Action
         </motion.button>
 
         <p className="text-sm text-white/30">
-          No credit card required · Join 500+ legal teams
+          {/* TODO: ボタン下の補足説明 */}
+          A short reassurance line goes here
         </p>
       </motion.div>
     </SlideWrapper>

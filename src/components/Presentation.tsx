@@ -23,6 +23,31 @@ import Slide17 from './slides/Slide17';
 import Slide18 from './slides/Slide18';
 import Slide19 from './slides/Slide19';
 import Slide20 from './slides/Slide20';
+import Slide21 from './slides/Slide21';
+import Slide22 from './slides/Slide22';
+import Slide23 from './slides/Slide23';
+import Slide24 from './slides/Slide24';
+import Slide25 from './slides/Slide25';
+import Slide26 from './slides/Slide26';
+import Slide27 from './slides/Slide27';
+import Slide28 from './slides/Slide28';
+import Slide29 from './slides/Slide29';
+import Slide30 from './slides/Slide30';
+import Slide31 from './slides/Slide31';
+import Slide32 from './slides/Slide32';
+import Slide33 from './slides/Slide33';
+import Slide34 from './slides/Slide34';
+import Slide35 from './slides/Slide35';
+import Slide36 from './slides/Slide36';
+import Slide37 from './slides/Slide37';
+import Slide38 from './slides/Slide38';
+import Slide39 from './slides/Slide39';
+import Slide40 from './slides/Slide40';
+import Slide41 from './slides/Slide41';
+import Slide42 from './slides/Slide42';
+import Slide43 from './slides/Slide43';
+import Slide44 from './slides/Slide44';
+import Slide45 from './slides/Slide45';
 
 const ParticleMorphBackground = dynamic(
   () => import('./ParticleMorphBackground'),
@@ -30,24 +55,47 @@ const ParticleMorphBackground = dynamic(
 );
 
 const slides = [
-  Slide01, Slide02, Slide03, Slide04, Slide05,
+  Slide01, Slide21, Slide02, Slide03, Slide04, Slide05,
   Slide06, Slide07, Slide08, Slide09, Slide10,
   Slide11, Slide12, Slide13, Slide14, Slide15,
   Slide16, Slide17, Slide18, Slide19, Slide20,
+  // 追加された素材スライド（順序は自由に並べ替え可）
+  Slide22, // 引用ヒーロー
+  Slide23, // 章扉・巨大番号
+  Slide24, // ヒーロー数字
+  Slide25, // 料金プラン 3 階層
+  Slide26, // Bento グリッド
+  Slide27, // チームグリッド
+  Slide28, // ロードマップ（4Q）
+  Slide29, // キーワードクラウド
+  Slide30, // ワールドマップ
+  Slide31, // 積層アーキテクチャ
+  // Cursor 視点で便利な dev-tool 系
+  Slide32, // AI エージェント フロー
+  Slide33, // コード Diff ビュー
+  Slide34, // ターミナル デモ
+  Slide35, // 判断ツリー
+  Slide36, // 技術スタック
+  Slide37, // ステータス ダッシュボード
+  Slide38, // 機能比較マトリクス
+  // セミナーのエンディング系
+  Slide39, // Thank You（大きな感謝）
+  Slide40, // Recap / Key Takeaways
+  Slide41, // Next Steps / Action Items
+  Slide42, // Further Reading
+  Slide43, // Save the Date
+  // 講師紹介系
+  Slide44, // Speaker Profile（1 人詳細）
+  Slide45, // Speakers Panel（2〜3 人）
 ];
 
-// パーティクル背景を非表示にするスライドのインデックス
-// 表示しないもの:
-//   3 = Slide04 (三角形)        — グロー干渉
-//   4 = Slide05 (条文)           — 可読性
-//   6 = Slide07 (ナレッジグラフ) — SVGノードと干渉
-//   8 = Slide09 (パーティクル文字) — 自前Canvas
-//  11 = Slide12 (Before/After)  — 比較の見やすさ
-//  12 = Slide13 (マトリクス)    — チャート可読性
-//  14 = Slide15 (オービット)    — 自前で派手な公転演出
-//  17 = Slide18 (バーチャート)  — 数字可読性
-//  18 = Slide19 (3Dキューブ)    — 自前Three.js
-const SLIDES_WITHOUT_BG = new Set([3, 4, 6, 8, 11, 12, 14, 17, 18]);
+// パーティクル背景を「表示する」スライドのインデックス (0 始まり)
+// 原則 OFF。アトモスフィアが欲しいスライドだけ明示的にこの set に追加してください。
+//   0  = Slide01 (タイトル)       — オープニングの空気感
+//  20  = Slide20 (Q&A)           — Q&A の余韻
+//  38  = Slide39 (Thank You)      — 大きな感謝メッセージのバックドロップ
+// TODO: 背景パーティクルを表示したいスライドのインデックスをここに追加
+const SLIDES_WITH_BG = new Set<number>([0, 20, 38]);
 
 const slideVariants = {
   enter: { opacity: 0 },
@@ -96,7 +144,7 @@ export default function Presentation() {
       onClick={handleClick}
     >
       <motion.div
-        animate={{ opacity: SLIDES_WITHOUT_BG.has(currentSlide) ? 0 : 1 }}
+        animate={{ opacity: SLIDES_WITH_BG.has(currentSlide) ? 1 : 0 }}
         transition={{ duration: 0.5, ease: 'easeInOut' }}
       >
         <ParticleMorphBackground />

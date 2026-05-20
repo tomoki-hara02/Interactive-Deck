@@ -17,39 +17,41 @@ const COLORS: Record<NonNullable<Tok['k']> | 'def', string> = {
   def: '#c8d4e8',
 };
 
-// Each row is an array of tokens; empty array = blank line
+// TODO: 表示したい疑似コードを書き換えてください
+// 各行はトークンの配列。空配列は空行になります。
+// k の種類: kw=キーワード(紫), str=文字列(黄), fn=関数(青), cm=コメント(灰), op=演算子(ピンク), num=数値(緑), var=変数(白)
 const LINES: Tok[][] = [
-  [{ t: '# Orbit — Legal Prompt Template', k: 'cm' }],
+  [{ t: '# Template — your prompt or pipeline', k: 'cm' }],
   [],
-  [{ t: 'role', k: 'kw' }, { t: ': ', k: 'op' }, { t: '"contract_reviewer"', k: 'str' }],
-  [{ t: 'goal', k: 'kw' }, { t: ': ', k: 'op' }, { t: '"NDA に潜む不利な条項を洗い出す"', k: 'str' }],
+  [{ t: 'role', k: 'kw' }, { t: ': ', k: 'op' }, { t: '"assistant_role"', k: 'str' }],
+  [{ t: 'goal', k: 'kw' }, { t: ': ', k: 'op' }, { t: '"このプロンプトのゴールを書く"', k: 'str' }],
   [],
-  [{ t: 'context', k: 'kw' }, { t: ' = ', k: 'op' }, { t: 'load', k: 'fn' }, { t: '(', k: 'op' }, { t: '"contract.pdf"', k: 'str' }, { t: ')', k: 'op' }],
-  [{ t: 'laws', k: 'kw' },    { t: ' = ', k: 'op' }, { t: '[', k: 'op' }, { t: '"著作権法"', k: 'str' }, { t: ', ', k: 'op' }, { t: '"個人情報保護法"', k: 'str' }, { t: ', ', k: 'op' }, { t: '"不正競争防止法"', k: 'str' }, { t: ']', k: 'op' }],
+  [{ t: 'context', k: 'kw' }, { t: ' = ', k: 'op' }, { t: 'load', k: 'fn' }, { t: '(', k: 'op' }, { t: '"input.pdf"', k: 'str' }, { t: ')', k: 'op' }],
+  [{ t: 'tags', k: 'kw' },    { t: ' = ', k: 'op' }, { t: '[', k: 'op' }, { t: '"タグ A"', k: 'str' }, { t: ', ', k: 'op' }, { t: '"タグ B"', k: 'str' }, { t: ', ', k: 'op' }, { t: '"タグ C"', k: 'str' }, { t: ']', k: 'op' }],
   [],
-  [{ t: 'def ', k: 'kw' }, { t: 'analyze', k: 'fn' }, { t: '(', k: 'op' }, { t: 'doc', k: 'var' }, { t: '):', k: 'op' }],
-  [{ t: '  clauses', k: 'var' }, { t: ' = ', k: 'op' }, { t: 'orbit.extract', k: 'fn' }, { t: '(', k: 'op' }, { t: 'doc', k: 'var' }, { t: ')', k: 'op' }],
-  [{ t: '  risks', k: 'var' },   { t: ' = ', k: 'op' }, { t: 'orbit.score', k: 'fn' },   { t: '(', k: 'op' }, { t: 'clauses', k: 'var' }, { t: ', ', k: 'op' }, { t: 'laws', k: 'var' }, { t: ')', k: 'op' }],
-  [{ t: '  return ', k: 'kw' }, { t: 'risks.', k: 'var' }, { t: 'sorted', k: 'fn' }, { t: '(', k: 'op' }, { t: 'by', k: 'kw' }, { t: '=', k: 'op' }, { t: '"severity"', k: 'str' }, { t: ', ', k: 'op' }, { t: 'desc', k: 'kw' }, { t: '=', k: 'op' }, { t: 'True', k: 'num' }, { t: ')', k: 'op' }],
+  [{ t: 'def ', k: 'kw' }, { t: 'process', k: 'fn' }, { t: '(', k: 'op' }, { t: 'doc', k: 'var' }, { t: '):', k: 'op' }],
+  [{ t: '  items', k: 'var' }, { t: ' = ', k: 'op' }, { t: 'extract', k: 'fn' }, { t: '(', k: 'op' }, { t: 'doc', k: 'var' }, { t: ')', k: 'op' }],
+  [{ t: '  scores', k: 'var' }, { t: ' = ', k: 'op' }, { t: 'evaluate', k: 'fn' },   { t: '(', k: 'op' }, { t: 'items', k: 'var' }, { t: ', ', k: 'op' }, { t: 'tags', k: 'var' }, { t: ')', k: 'op' }],
+  [{ t: '  return ', k: 'kw' }, { t: 'scores.', k: 'var' }, { t: 'sorted', k: 'fn' }, { t: '(', k: 'op' }, { t: 'by', k: 'kw' }, { t: '=', k: 'op' }, { t: '"score"', k: 'str' }, { t: ', ', k: 'op' }, { t: 'desc', k: 'kw' }, { t: '=', k: 'op' }, { t: 'True', k: 'num' }, { t: ')', k: 'op' }],
   [],
-  [{ t: '# → 12 件のリスクが見つかりました', k: 'cm' }],
+  [{ t: '# → 結果の要約をコメントとして表示', k: 'cm' }],
 ];
 
 export default function Slide14() {
   return (
     <SlideWrapper>
       <motion.div
-        className="flex flex-col w-full max-w-4xl gap-6"
+        className="flex flex-col w-full max-w-4xl gap-3 md:gap-5 max-h-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: 'easeInOut' }}
       >
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 shrink-0">
           <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
             Prompt Engineering
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-            「法律家のための」設計言語
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+            「現場のための」設計言語
           </h2>
         </div>
 
@@ -70,26 +72,30 @@ export default function Slide14() {
             <span className="w-3 h-3 rounded-full bg-[#ffbd2e]/70" />
             <span className="w-3 h-3 rounded-full bg-[#27c93f]/70" />
             <span className="ml-3 text-[11px] text-white/40 font-mono tracking-wide">
-              orbit/templates/nda_review.py
+              {/* TODO: 表示ファイル名（疑似的なパス） */}
+              project/templates/example.py
             </span>
             <span className="ml-auto text-[10px] text-[#88bbff]/70 tracking-widest">
               ● connected
             </span>
           </div>
 
-          {/* Code area */}
-          <div className="flex">
+          {/* Code area — 画面高さで縮小 */}
+          <div
+            className="flex overflow-auto"
+            style={{ maxHeight: 'min(54vh, 380px)' }}
+          >
             {/* Line numbers */}
-            <div className="px-4 py-5 text-right select-none">
+            <div className="px-3 md:px-4 py-3 md:py-5 text-right select-none">
               {LINES.map((_, i) => (
-                <div key={i} className="text-[11px] font-mono text-white/20 leading-6">
+                <div key={i} className="text-[10px] md:text-[11px] font-mono text-white/20 leading-5 md:leading-6">
                   {i + 1}
                 </div>
               ))}
             </div>
 
             {/* Code lines */}
-            <div className="flex-1 py-5 pr-6 font-mono text-[13px] leading-6">
+            <div className="flex-1 py-3 md:py-5 pr-4 md:pr-6 font-mono text-[11px] md:text-[13px] leading-5 md:leading-6">
               {LINES.map((line, li) => (
                 <motion.div
                   key={li}
@@ -124,13 +130,13 @@ export default function Slide14() {
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 1.4, repeat: Infinity }}
               />
-              <span>orbit-runtime · ready</span>
+              <span>{/* TODO: ステータスバー右側のテキスト */}runtime · ready</span>
             </div>
           </div>
         </motion.div>
 
-        <p className="text-xs text-white/30 tracking-wide">
-          法務ワークフローを「再利用可能なテンプレート」として組み立てる
+        <p className="text-[11px] md:text-xs text-white/30 tracking-wide shrink-0">
+          ワークフローを「再利用可能なテンプレート」として組み立てる
         </p>
       </motion.div>
     </SlideWrapper>

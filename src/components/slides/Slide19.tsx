@@ -128,13 +128,16 @@ export default function Slide19() {
         style={{ position: 'absolute', top: '12%', left: '8%' }}
       >
         <span className="text-[10px] tracking-[0.22em] uppercase text-white/40">
+          {/* TODO: 上部のセクションラベル */}
           Knowledge Cube
         </span>
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-          多次元の法的知識を、<br />一つの空間に。
+          {/* TODO: 大見出し（2 行構成） */}
+          多次元のデータを、<br />一つの空間に。
         </h2>
         <p className="text-sm text-white/45 leading-relaxed mt-3 max-w-md">
-          条文・判例・解釈・実務慣行 — 異なる軸の情報を、AI が同一ベクトル空間で扱う。
+          {/* TODO: 補足説明（1〜2 行） */}
+          異なる軸の情報を、同一のベクトル空間で扱うことで横断的に推論できる。
         </p>
       </motion.div>
 
@@ -151,7 +154,8 @@ export default function Slide19() {
           transition={{ duration: 1.4, repeat: Infinity }}
         />
         <span className="text-[10px] tracking-[0.22em] uppercase text-white/40">
-          Vector Space · 768d
+          {/* TODO: 右下のキャプション */}
+          Tech Label · spec
         </span>
       </motion.div>
     </SlideWrapper>

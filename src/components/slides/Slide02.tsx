@@ -3,24 +3,25 @@
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
+// TODO: 3 つの特徴・ベネフィットを書き換えてください
 const features = [
   {
-    icon: '⚖️',
-    title: 'Contract Intelligence',
+    icon: '✦',
+    title: 'Feature One',
     description:
-      'Automatically analyze and summarize complex legal documents in seconds with AI-powered precision.',
+      '1 つ目の特徴の概要をここに記述します。読み手に最も伝えたい価値を 2 行程度で簡潔に。',
   },
   {
-    icon: '🔍',
-    title: 'Risk Detection',
+    icon: '◆',
+    title: 'Feature Two',
     description:
-      'Identify potential legal risks and compliance issues before they become costly problems.',
+      '2 つ目の特徴の概要をここに記述します。前のカードと並列に並ぶ「同じ階層」の価値を書きます。',
   },
   {
-    icon: '🚀',
-    title: '10× Faster Review',
+    icon: '●',
+    title: 'Feature Three',
     description:
-      'Reduce manual review time dramatically so your legal team can focus on high-value strategy.',
+      '3 つ目の特徴の概要をここに記述します。最後のカードには定量的なインパクトを置くと印象的です。',
   },
 ];
 
@@ -34,7 +35,8 @@ export default function Slide02() {
         transition={{ duration: 0.6, ease: 'easeInOut', delay: 0.1 }}
       >
         <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
-          Why AI + Legal?
+          {/* TODO: セクションの問いかけ / メインメッセージ */}
+          Why this matters?
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">

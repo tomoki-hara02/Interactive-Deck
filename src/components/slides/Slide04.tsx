@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
 
 // ─── Triangle geometry ──────────────────────────────────────────────────────
-// viewBox は両側に法律名ラベル分の余白を確保した横長サイズ
-const S  = 280;                             // side length (SVG units)
+// viewBox は両側に頂点ラベル分の余白を確保した横長サイズ
+const S  = 400;                             // side length (SVG units) — 大きめに調整
 const H  = (S * Math.sqrt(3)) / 2;         // height
-const VW = 760, VH = 540;                  // viewBox size
+const VW = 760, VH = 580;                  // viewBox size
 const CX = VW / 2, CY = VH / 2 + 10;      // center
 
 const vT = { x: CX,         y: CY - (H * 2) / 3 };   // top
@@ -26,36 +26,37 @@ const SEG_C = SEG_LEN; // core glow segment
 // Vertex pulse peaks: top=0s, right=1.33s, left=2.67s
 const CYCLE = 4;
 
-// ─── Law node definitions ───────────────────────────────────────────────────
+// ─── Node definitions ───────────────────────────────────────────────────────
+// TODO: 3 つの頂点に置く要素（コンセプト・概念・キーワードなど）を書き換えてください
 const NODES = [
   {
     v:     vT,
-    law:   '著作権法',
-    en:    'Copyright Law',
-    sub:   'コンテンツ・創作物の知的財産を保護',
+    law:   'トピック A',
+    en:    'Topic A',
+    sub:   '1 つ目の概念の説明をここに',
     color: '#c4aeff',
     anchor: 'middle' as const,
-    lx: 0, ly: -34,           // label offset from vertex
+    lx: 0, ly: -38,
     delay: 0,
   },
   {
     v:     vR,
-    law:   '不正競争防止法',
-    en:    'Unfair Competition Law',
-    sub:   '営業秘密・ブランドを競争上の不正から保護',
+    law:   'トピック B',
+    en:    'Topic B',
+    sub:   '2 つ目の概念の説明をここに',
     color: '#88bbff',
     anchor: 'start' as const,
-    lx: 22, ly: 4,
+    lx: 26, ly: 6,
     delay: CYCLE / 3,
   },
   {
     v:     vL,
-    law:   '個人情報保護法',
-    en:    'Personal Information Law',
-    sub:   '個人データ取扱いとプライバシーを規律',
+    law:   'トピック C',
+    en:    'Topic C',
+    sub:   '3 つ目の概念の説明をここに',
     color: '#ffaacc',
     anchor: 'end' as const,
-    lx: -22, ly: 4,
+    lx: -26, ly: 6,
     delay: (CYCLE * 2) / 3,
   },
 ];
@@ -65,27 +66,27 @@ export default function Slide04() {
   return (
     <SlideWrapper>
       <motion.div
-        className="flex flex-col items-center gap-6 w-full max-w-4xl px-4"
+        className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-4xl px-4 max-h-full"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeInOut', delay: 0.05 }}
       >
         {/* Header */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <span className="text-xs tracking-[0.22em] uppercase text-white/35">
-            Legal Framework
+        <div className="flex flex-col items-center gap-1 md:gap-2 text-center shrink-0">
+          <span className="text-[10px] md:text-xs tracking-[0.22em] uppercase text-white/35">
+            Section Label
           </span>
-          <h2 className="text-5xl font-bold tracking-tight text-white">
-            3つの重要法規
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            3つの重要トピック
           </h2>
         </div>
 
-        {/* SVG Triangle */}
+        {/* SVG Triangle — 画面高さに応じて自動縮小 */}
         <svg
           viewBox={`0 0 ${VW} ${VH}`}
-          className="w-full max-w-[760px]"
+          className="w-full max-w-[820px]"
           preserveAspectRatio="xMidYMid meet"
-          style={{ overflow: 'visible' }}
+          style={{ overflow: 'visible', maxHeight: 'min(70vh, 620px)' }}
         >
           <defs>
             {/* Wide soft glow filter */}
@@ -197,7 +198,7 @@ export default function Slide04() {
                 y={node.v.y + node.ly}
                 textAnchor={node.anchor}
                 fill={node.color}
-                fontSize={15}
+                fontSize={18}
                 fontWeight="700"
                 letterSpacing="0.02em"
                 fontFamily="sans-serif"
@@ -208,10 +209,10 @@ export default function Slide04() {
               {/* English subtitle */}
               <text
                 x={node.v.x + node.lx}
-                y={node.v.y + node.ly + 18}
+                y={node.v.y + node.ly + 20}
                 textAnchor={node.anchor}
                 fill="rgba(255,255,255,0.32)"
-                fontSize={10}
+                fontSize={11}
                 fontFamily="sans-serif"
                 letterSpacing="0.04em"
               >
@@ -220,34 +221,34 @@ export default function Slide04() {
             </g>
           ))}
 
-          {/* ── Center label ── */}
+          {/* ── Center label ── TODO: 中央のロゴ・キーワードを書き換え */}
           <text
             x={CX}
             y={CY - 6}
             textAnchor="middle"
-            fill="rgba(255,255,255,0.18)"
-            fontSize={11}
+            fill="rgba(255,255,255,0.22)"
+            fontSize={13}
             letterSpacing="0.18em"
             fontFamily="sans-serif"
           >
-            ORBIT
+            CORE
           </text>
           <text
             x={CX}
-            y={CY + 12}
+            y={CY + 14}
             textAnchor="middle"
-            fill="rgba(255,255,255,0.10)"
-            fontSize={9}
+            fill="rgba(255,255,255,0.12)"
+            fontSize={10}
             letterSpacing="0.12em"
             fontFamily="sans-serif"
           >
-            LEGAL AI
+            CONCEPT
           </text>
         </svg>
 
         {/* Footer note */}
-        <p className="text-center text-xs text-white/30 tracking-wide">
-          AIが法的文書を処理する際に交差する 3 つの重要な法律領域
+        <p className="text-center text-[11px] md:text-xs text-white/30 tracking-wide shrink-0">
+          3つの要素が交差するところに、本テーマのコアがある
         </p>
       </motion.div>
     </SlideWrapper>

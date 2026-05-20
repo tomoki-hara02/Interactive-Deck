@@ -20,36 +20,32 @@ type Node = {
   hub?: boolean;
 };
 
+// TODO: 中央ハブ + 周辺ノードを書き換えてください
 const NODES: Node[] = [
-  // Center hub
-  { id: 'core', label: 'Orbit AI', x: CX, y: CY, r: 36, hub: true },
-  // Primary laws
-  { id: 'cr',   label: '著作権法',         sub: 'Copyright',   x: CX,        y: CY - 170, r: 26 },
-  { id: 'pi',   label: '個人情報保護法',   sub: 'PIPL',        x: CX - 250,  y: CY - 50,  r: 26 },
-  { id: 'uc',   label: '不正競争防止法',   sub: 'Unfair Comp.', x: CX + 250,  y: CY - 50,  r: 26 },
-  // Secondary
-  { id: 'ai',   label: 'AI法',             sub: '2026', x: CX - 180,  y: CY + 130, r: 20 },
-  { id: 'iso',  label: 'ISO/IEC 42001',    sub: 'AI Mgmt',    x: CX + 180,  y: CY + 130, r: 20 },
-  { id: 'gdpr', label: 'GDPR',             sub: 'EU',         x: CX,        y: CY + 200, r: 20 },
+  { id: 'core', label: 'Core',     x: CX, y: CY, r: 36, hub: true },
+  { id: 'n1',   label: 'Topic 1',  sub: 'Primary',   x: CX,       y: CY - 170, r: 26 },
+  { id: 'n2',   label: 'Topic 2',  sub: 'Primary',   x: CX - 250, y: CY - 50,  r: 26 },
+  { id: 'n3',   label: 'Topic 3',  sub: 'Primary',   x: CX + 250, y: CY - 50,  r: 26 },
+  { id: 'n4',   label: 'Topic 4',  sub: 'Secondary', x: CX - 180, y: CY + 130, r: 20 },
+  { id: 'n5',   label: 'Topic 5',  sub: 'Secondary', x: CX + 180, y: CY + 130, r: 20 },
+  { id: 'n6',   label: 'Topic 6',  sub: 'Secondary', x: CX,       y: CY + 200, r: 20 },
 ];
 
 // ─── Edge definitions ───────────────────────────────────────────────────────
 type Edge = { from: string; to: string };
 
+// TODO: ノード間の繋がりを定義してください（id を 2 つペアにする）
 const EDGES: Edge[] = [
-  // Hub → primary
-  { from: 'core', to: 'cr' },
-  { from: 'core', to: 'pi' },
-  { from: 'core', to: 'uc' },
-  // Hub → secondary
-  { from: 'core', to: 'ai' },
-  { from: 'core', to: 'iso' },
-  { from: 'core', to: 'gdpr' },
-  // Cross-links
-  { from: 'cr',  to: 'ai' },
-  { from: 'pi',  to: 'gdpr' },
-  { from: 'pi',  to: 'ai' },
-  { from: 'uc',  to: 'iso' },
+  { from: 'core', to: 'n1' },
+  { from: 'core', to: 'n2' },
+  { from: 'core', to: 'n3' },
+  { from: 'core', to: 'n4' },
+  { from: 'core', to: 'n5' },
+  { from: 'core', to: 'n6' },
+  { from: 'n1',   to: 'n4' },
+  { from: 'n2',   to: 'n6' },
+  { from: 'n2',   to: 'n4' },
+  { from: 'n3',   to: 'n5' },
 ];
 
 // ─── Component ──────────────────────────────────────────────────────────────
@@ -62,22 +58,27 @@ export default function Slide07() {
   return (
     <SlideWrapper>
       <motion.div
-        className="flex flex-col items-start gap-6 w-full max-w-5xl"
+        className="flex flex-col items-start gap-3 md:gap-5 w-full max-w-5xl max-h-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: 'easeInOut' }}
       >
         {/* Header */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 shrink-0">
           <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
             Knowledge Graph
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            Orbit が織りなす法令ネットワーク
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+            アイデアが織りなすネットワーク
           </h2>
         </div>
 
-        <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full" style={{ overflow: 'visible' }}>
+        <svg
+          viewBox={`0 0 ${VW} ${VH}`}
+          className="w-full"
+          preserveAspectRatio="xMidYMid meet"
+          style={{ overflow: 'visible', maxHeight: 'min(64vh, 540px)' }}
+        >
           <defs>
             <filter id="g7-glow" x="-100%" y="-100%" width="300%" height="300%">
               <feGaussianBlur stdDeviation="3.2" result="b" />
@@ -226,8 +227,8 @@ export default function Slide07() {
           ))}
         </svg>
 
-        <p className="text-xs text-white/30 tracking-wide self-center">
-          交差する法令を一つのナレッジ・グラフとして扱うことで、AI は文脈横断の推論を可能にする
+        <p className="text-[11px] md:text-xs text-white/30 tracking-wide self-center shrink-0">
+          関連する概念を一つのネットワークとして扱うことで、横断的な推論が可能になる
         </p>
       </motion.div>
     </SlideWrapper>

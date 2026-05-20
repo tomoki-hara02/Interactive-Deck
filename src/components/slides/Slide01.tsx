@@ -21,12 +21,14 @@ export default function Slide01() {
         <h1 className="text-7xl md:text-8xl font-bold tracking-tight text-white leading-none">
           Welcome to{' '}
           <span className="bg-gradient-to-r from-[#7B5EA7] via-[#4F8EF7] to-[#FF6B9D] bg-clip-text text-transparent">
-            Orbit
+            {/* TODO: ブランド名 / プロジェクト名 */}
+            Project
           </span>
         </h1>
 
         <p className="text-xl md:text-2xl text-white/70 font-light tracking-wide mt-2">
-          The future of legal × AI
+          {/* TODO: サブタイトル / 一言コピー */}
+          A short, punchy subtitle for your presentation
         </p>
 
         <motion.div

@@ -10,12 +10,13 @@ type Step = {
   desc: string;
 };
 
+// TODO: 5 つの処理ステップを書き換えてください
 const STEPS: Step[] = [
-  { badge: '01', title: 'Ingest',  desc: 'PDF・契約書・規程をドラッグ&ドロップで取込' },
-  { badge: '02', title: 'Parse',   desc: 'OCR + 構造解析で条項単位に分解' },
-  { badge: '03', title: 'Embed',   desc: 'ベクトル化して意味検索可能な状態に' },
-  { badge: '04', title: 'Reason',  desc: '関連法令・判例を参照しながら推論' },
-  { badge: '05', title: 'Output',  desc: 'リスクスコア付きで結果を提示' },
+  { badge: '01', title: 'Step 1',  desc: 'ステップ 1 の説明をここに記述します' },
+  { badge: '02', title: 'Step 2',  desc: 'ステップ 2 の説明をここに記述します' },
+  { badge: '03', title: 'Step 3',  desc: 'ステップ 3 の説明をここに記述します' },
+  { badge: '04', title: 'Step 4',  desc: 'ステップ 4 の説明をここに記述します' },
+  { badge: '05', title: 'Step 5',  desc: 'ステップ 5 の説明をここに記述します' },
 ];
 
 const STEP_MS = 1500;
@@ -43,6 +44,7 @@ export default function Slide17() {
             Pipeline
           </span>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+            {/* TODO: パイプラインのタイトル */}
             5 ステップで完結する処理フロー
           </h2>
         </div>
@@ -141,7 +143,8 @@ export default function Slide17() {
         </div>
 
         <p className="text-xs text-white/30 tracking-wide self-center mt-6">
-          入力から出力まで、平均 3 秒以内
+          {/* TODO: パイプライン全体の補足 */}
+          入力から出力まで、シンプルな一本道で完結
         </p>
       </motion.div>
     </SlideWrapper>

@@ -9,26 +9,23 @@ import SlideWrapper from '../SlideWrapper';
 type TextChunk = { text: string; accent?: boolean };
 type IndexedChunk = TextChunk & { globalIdx: number };
 
+// TODO: クリックで段階的に強調していく本文 / 条文 / 引用文を書き換えてください
+// accent: true を付けた段落はハイライト色（青）で目立たせます。
 const RAW_BLOCKS: TextChunk[][] = [
-  // ① 本文・第1文
   [
-    { text: '著作物は、次に掲げる場合その他の当該著作物に表現された思想又は感情を自ら享受し又は他人に享受させることを目的としない場合には、その必要と認められる限度において、いずれの方法によるかを問わず、利用することができる。' },
+    { text: 'ここに本文の第 1 段落を配置します。長い引用文や条文、宣言文などをそのまま貼り付けるのに向いています。クリックするごとに段落が順に強調されていきます。' },
   ],
-  // ② 本文・ただし書
   [
-    { text: 'ただし、当該著作物の種類及び用途並びに当該利用の態様に照らし著作権者の利益を不当に害することとなる場合は、この限りでない。' },
+    { text: 'ここに本文の第 2 段落を配置します。前段の補足条件や、ただし書を入れる場所として活用してください。' },
   ],
-  // ③ 一号
   [
-    { text: '一　著作物の録音、録画その他の利用に係る技術の開発又は実用化のための試験の用に供する場合' },
+    { text: '一　第 1 のサブ条項。箇条書きとしてインデントされて表示されます。' },
   ],
-  // ④ 二号（AI学習 — アクセント）
   [
-    { text: '二　情報解析（多数の著作物その他の大量の情報から、当該情報を構成する言語、音、影像その他の要素に係る情報を抽出し、比較、分類その他の解析を行うことをいう。）の用に供する場合', accent: true },
+    { text: '二　第 2 のサブ条項（強調表示）。聴衆に最も伝えたい一文を、accent: true で目立たせましょう。', accent: true },
   ],
-  // ⑤ 三号（AI処理 — アクセント）
   [
-    { text: '三　前二号に掲げる場合のほか、著作物の表現についての人の知覚による認識を伴うことなく当該著作物を電子計算機による情報処理の過程における利用その他の利用に供する場合', accent: true },
+    { text: '三　第 3 のサブ条項（強調表示）。複数のキーポイントを連続して強調することもできます。', accent: true },
   ],
 ];
 
@@ -69,17 +66,17 @@ export default function Slide05() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: 'easeInOut' }}
         >
-          {/* ── ヘッダー ── */}
+          {/* ── ヘッダー ── TODO: 出典・タイトル・サブタイトルを書き換え */}
           <div className="flex flex-col gap-0.5">
             <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
-              著作権法
+              Source / Category
             </span>
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold tracking-tight text-white">
-                第30条の4
+                セクション タイトル
               </span>
               <span className="text-[11px] text-white/30 leading-none">
-                著作物に表現された思想又は感情の享受を目的としない利用
+                本文の出典・章番号などの補足テキスト
               </span>
             </div>
           </div>
@@ -117,11 +114,11 @@ export default function Slide05() {
             ))}
           </div>
 
-          {/* ── フッター注釈 ── */}
+          {/* ── フッター注釈 ── TODO: 強調パートの要約・結論を一行で */}
           <div className="flex items-center gap-2 mt-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#88bbff]/60" />
             <span className="text-[11px] text-white/25 tracking-wide">
-              二号・三号が AI による著作物の学習・処理を適法とする根拠規定
+              ハイライト部分の結論や要約をここに 1 行で添える
             </span>
           </div>
         </motion.div>

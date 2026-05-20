@@ -117,41 +117,42 @@ export default function Slide06() {
         {/* Heading */}
         <div className="flex flex-col gap-2">
           <span className="text-[10px] tracking-[0.22em] uppercase text-white/30">
-            Orbit Impact
+            Section Label
           </span>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            数字が示す、変化のスケール
+            {/* TODO: メトリクスのセクションタイトル */}
+            数字が示す、インパクト
           </h2>
         </div>
 
-        {/* Metrics grid */}
+        {/* Metrics grid — TODO: 値・ラベル・色を 3 つ書き換え */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-14">
           <Metric
-            label="Review Speed"
+            label="Metric A"
             value={10}
             suffix="×"
-            sublabel="従来の契約書レビューに比べて、AIによる初次解析は最大10倍高速"
+            sublabel="1 つ目の数字の解釈・コンテキストをここに記述します"
             accent="#c8a8ff"
             start={inView}
             delay={0.0}
           />
           <Metric
             prefix=""
-            label="Time Saved"
+            label="Metric B"
             value={0.3}
             suffix="s"
             decimals={1}
-            sublabel="平均クエリ応答時間。1秒未満で関連条項を瞬時に抽出"
+            sublabel="2 つ目の数字の解釈・コンテキストをここに記述します"
             accent="#88bbff"
             start={inView}
             delay={0.15}
           />
           <Metric
-            label="Coverage"
+            label="Metric C"
             value={120}
             suffix="K+"
-            unit="条文"
-            sublabel="日本国内の法令・判例・ガイドラインを横断的にインデックス化"
+            unit="units"
+            sublabel="3 つ目の数字の解釈・コンテキストをここに記述します"
             accent="#ffaacc"
             start={inView}
             delay={0.3}
@@ -167,7 +168,8 @@ export default function Slide06() {
         />
 
         <p className="text-xs text-white/30 tracking-wide">
-          ※ ベンチマーク数値はパイロット導入企業 12 社の中央値。実数は環境により変動します。
+          {/* TODO: 数値の出典・注釈 */}
+          ※ ここに数値の出典や注釈を入れます（例：ベンチマーク条件・サンプル数など）
         </p>
       </motion.div>
     </SlideWrapper>
