@@ -1,51 +1,51 @@
 import type { ComponentType } from 'react';
 import type { DeckBackgroundVariant } from '@/components/backgrounds';
 
-import Slide01 from '@/components/slides/Slide01';
-import Slide02 from '@/components/slides/Slide02';
-import Slide03 from '@/components/slides/Slide03';
-import Slide04 from '@/components/slides/Slide04';
-import Slide05 from '@/components/slides/Slide05';
-import Slide06 from '@/components/slides/Slide06';
-import Slide07 from '@/components/slides/Slide07';
-import Slide08 from '@/components/slides/Slide08';
-import Slide09 from '@/components/slides/Slide09';
-import Slide10 from '@/components/slides/Slide10';
-import Slide11 from '@/components/slides/Slide11';
-import Slide12 from '@/components/slides/Slide12';
-import Slide13 from '@/components/slides/Slide13';
-import Slide14 from '@/components/slides/Slide14';
-import Slide15 from '@/components/slides/Slide15';
-import Slide16 from '@/components/slides/Slide16';
-import Slide17 from '@/components/slides/Slide17';
-import Slide18 from '@/components/slides/Slide18';
-import Slide19 from '@/components/slides/Slide19';
-import Slide20 from '@/components/slides/Slide20';
-import Slide21 from '@/components/slides/Slide21';
-import Slide22 from '@/components/slides/Slide22';
-import Slide23 from '@/components/slides/Slide23';
-import Slide24 from '@/components/slides/Slide24';
-import Slide25 from '@/components/slides/Slide25';
-import Slide26 from '@/components/slides/Slide26';
-import Slide27 from '@/components/slides/Slide27';
-import Slide28 from '@/components/slides/Slide28';
-import Slide29 from '@/components/slides/Slide29';
-import Slide30 from '@/components/slides/Slide30';
-import Slide31 from '@/components/slides/Slide31';
-import Slide32 from '@/components/slides/Slide32';
-import Slide33 from '@/components/slides/Slide33';
-import Slide34 from '@/components/slides/Slide34';
-import Slide35 from '@/components/slides/Slide35';
-import Slide36 from '@/components/slides/Slide36';
-import Slide37 from '@/components/slides/Slide37';
-import Slide38 from '@/components/slides/Slide38';
-import Slide39 from '@/components/slides/Slide39';
-import Slide40 from '@/components/slides/Slide40';
-import Slide41 from '@/components/slides/Slide41';
-import Slide42 from '@/components/slides/Slide42';
-import Slide43 from '@/components/slides/Slide43';
-import Slide44 from '@/components/slides/Slide44';
-import Slide45 from '@/components/slides/Slide45';
+import SlideTitleHero      from '@/components/slides/SlideTitleHero';
+import SlideFeatureCards   from '@/components/slides/SlideFeatureCards';
+import SlideCTA            from '@/components/slides/SlideCTA';
+import SlideTriangleDiagram from '@/components/slides/SlideTriangleDiagram';
+import SlideTextHighlight  from '@/components/slides/SlideTextHighlight';
+import SlideMetrics        from '@/components/slides/SlideMetrics';
+import SlideKnowledgeGraph from '@/components/slides/SlideKnowledgeGraph';
+import SlideChatDemo       from '@/components/slides/SlideChatDemo';
+import SlideParticleText   from '@/components/slides/SlideParticleText';
+import SlideCardCarousel   from '@/components/slides/SlideCardCarousel';
+import SlideTimeline       from '@/components/slides/SlideTimeline';
+import SlideBeforeAfter    from '@/components/slides/SlideBeforeAfter';
+import SlideTwoAxisMatrix  from '@/components/slides/SlideTwoAxisMatrix';
+import SlideCodeEditor     from '@/components/slides/SlideCodeEditor';
+import SlideOrbitDiagram   from '@/components/slides/SlideOrbitDiagram';
+import SlideLogoBand       from '@/components/slides/SlideLogoBand';
+import SlidePipeline       from '@/components/slides/SlidePipeline';
+import SlideBarChart       from '@/components/slides/SlideBarChart';
+import SlideCube3D         from '@/components/slides/SlideCube3D';
+import SlideQAClosing      from '@/components/slides/SlideQAClosing';
+import SlideLogoParticles  from '@/components/slides/SlideLogoParticles';
+import SlidePullQuote      from '@/components/slides/SlidePullQuote';
+import SlideChapterDivider from '@/components/slides/SlideChapterDivider';
+import SlideHeroStat       from '@/components/slides/SlideHeroStat';
+import SlidePricingTiers   from '@/components/slides/SlidePricingTiers';
+import SlideBentoGrid      from '@/components/slides/SlideBentoGrid';
+import SlideTeamGrid       from '@/components/slides/SlideTeamGrid';
+import SlideRoadmap        from '@/components/slides/SlideRoadmap';
+import SlideKeywordCloud   from '@/components/slides/SlideKeywordCloud';
+import SlideWorldMap       from '@/components/slides/SlideWorldMap';
+import SlideLayeredArch    from '@/components/slides/SlideLayeredArch';
+import SlideAgentFlow      from '@/components/slides/SlideAgentFlow';
+import SlideCodeDiff       from '@/components/slides/SlideCodeDiff';
+import SlideTerminalDemo   from '@/components/slides/SlideTerminalDemo';
+import SlideDecisionTree   from '@/components/slides/SlideDecisionTree';
+import SlideTechStack      from '@/components/slides/SlideTechStack';
+import SlideStatusDashboard from '@/components/slides/SlideStatusDashboard';
+import SlideFeatureMatrix  from '@/components/slides/SlideFeatureMatrix';
+import SlideThankYou       from '@/components/slides/SlideThankYou';
+import SlideRecap          from '@/components/slides/SlideRecap';
+import SlideNextSteps      from '@/components/slides/SlideNextSteps';
+import SlideFurtherReading from '@/components/slides/SlideFurtherReading';
+import SlideSaveTheDate    from '@/components/slides/SlideSaveTheDate';
+import SlideSpeakerProfile from '@/components/slides/SlideSpeakerProfile';
+import SlideSpeakersPanel  from '@/components/slides/SlideSpeakersPanel';
 
 export interface SlideEntry {
   /** 一意の slug。URL ハッシュやアナリティクス用 */
@@ -72,59 +72,59 @@ export interface SlideEntry {
  * 「何が・どんな順で・どんな背景で出るか」が分かるようにしてあります。
  */
 export const slideRegistry: SlideEntry[] = [
-  { id: 'title', Component: Slide01, background: 'morph', note: 'タイトル' },
-  { id: 'logo-particles', Component: Slide21, note: 'ロゴパーティクル' },
-  { id: 'feature-cards', Component: Slide02 },
-  { id: 'cta', Component: Slide03 },
-  { id: 'triangle', Component: Slide04 },
-  { id: 'highlight', Component: Slide05 },
-  { id: 'metrics', Component: Slide06 },
-  { id: 'graph', Component: Slide07 },
-  { id: 'llm-qa', Component: Slide08 },
-  { id: 'particle-text', Component: Slide09 },
-  { id: 'card-carousel', Component: Slide10 },
-  { id: 'timeline', Component: Slide11 },
-  { id: 'before-after', Component: Slide12 },
-  { id: 'matrix', Component: Slide13 },
-  { id: 'code-editor', Component: Slide14 },
-  { id: 'orbit', Component: Slide15 },
-  { id: 'logo-band', Component: Slide16 },
-  { id: 'pipeline', Component: Slide17 },
-  { id: 'bar-chart', Component: Slide18 },
-  { id: 'cube-3d', Component: Slide19 },
-  { id: 'qa-close', Component: Slide20, background: 'morph', note: 'Q&A 締め' },
+  { id: 'title',            Component: SlideTitleHero,      background: 'morph', note: 'タイトル' },
+  { id: 'logo-particles',   Component: SlideLogoParticles,  note: 'ロゴパーティクル' },
+  { id: 'feature-cards',    Component: SlideFeatureCards },
+  { id: 'cta',              Component: SlideCTA },
+  { id: 'triangle',         Component: SlideTriangleDiagram },
+  { id: 'highlight',        Component: SlideTextHighlight },
+  { id: 'metrics',          Component: SlideMetrics },
+  { id: 'graph',            Component: SlideKnowledgeGraph },
+  { id: 'llm-qa',           Component: SlideChatDemo },
+  { id: 'particle-text',    Component: SlideParticleText },
+  { id: 'card-carousel',    Component: SlideCardCarousel },
+  { id: 'timeline',         Component: SlideTimeline },
+  { id: 'before-after',     Component: SlideBeforeAfter },
+  { id: 'matrix',           Component: SlideTwoAxisMatrix },
+  { id: 'code-editor',      Component: SlideCodeEditor },
+  { id: 'orbit',            Component: SlideOrbitDiagram },
+  { id: 'logo-band',        Component: SlideLogoBand },
+  { id: 'pipeline',         Component: SlidePipeline },
+  { id: 'bar-chart',        Component: SlideBarChart },
+  { id: 'cube-3d',          Component: SlideCube3D },
+  { id: 'qa-close',         Component: SlideQAClosing,      background: 'morph', note: 'Q&A 締め' },
 
   // 追加された素材スライド
-  { id: 'pull-quote', Component: Slide22 },
-  { id: 'chapter-divider', Component: Slide23 },
-  { id: 'hero-stat', Component: Slide24 },
-  { id: 'pricing-tiers', Component: Slide25 },
-  { id: 'bento-grid', Component: Slide26 },
-  { id: 'team-grid', Component: Slide27 },
-  { id: 'roadmap', Component: Slide28 },
-  { id: 'keyword-cloud', Component: Slide29 },
-  { id: 'world-map', Component: Slide30 },
-  { id: 'architecture', Component: Slide31 },
+  { id: 'pull-quote',       Component: SlidePullQuote },
+  { id: 'chapter-divider',  Component: SlideChapterDivider },
+  { id: 'hero-stat',        Component: SlideHeroStat },
+  { id: 'pricing-tiers',    Component: SlidePricingTiers },
+  { id: 'bento-grid',       Component: SlideBentoGrid },
+  { id: 'team-grid',        Component: SlideTeamGrid },
+  { id: 'roadmap',          Component: SlideRoadmap },
+  { id: 'keyword-cloud',    Component: SlideKeywordCloud },
+  { id: 'world-map',        Component: SlideWorldMap },
+  { id: 'architecture',     Component: SlideLayeredArch },
 
   // Cursor 視点で便利な dev-tool 系
-  { id: 'agent-flow', Component: Slide32 },
-  { id: 'code-diff', Component: Slide33 },
-  { id: 'terminal-demo', Component: Slide34 },
-  { id: 'decision-tree', Component: Slide35 },
-  { id: 'tech-stack', Component: Slide36 },
-  { id: 'status-dashboard', Component: Slide37 },
-  { id: 'feature-matrix', Component: Slide38 },
+  { id: 'agent-flow',       Component: SlideAgentFlow },
+  { id: 'code-diff',        Component: SlideCodeDiff },
+  { id: 'terminal-demo',    Component: SlideTerminalDemo },
+  { id: 'decision-tree',    Component: SlideDecisionTree },
+  { id: 'tech-stack',       Component: SlideTechStack },
+  { id: 'status-dashboard', Component: SlideStatusDashboard },
+  { id: 'feature-matrix',   Component: SlideFeatureMatrix },
 
   // セミナーのエンディング系
-  { id: 'thank-you', Component: Slide39, background: 'morph', note: 'Thank You' },
-  { id: 'recap', Component: Slide40 },
-  { id: 'next-steps', Component: Slide41 },
-  { id: 'further-reading', Component: Slide42 },
-  { id: 'save-the-date', Component: Slide43 },
+  { id: 'thank-you',        Component: SlideThankYou,       background: 'morph', note: 'Thank You' },
+  { id: 'recap',            Component: SlideRecap },
+  { id: 'next-steps',       Component: SlideNextSteps },
+  { id: 'further-reading',  Component: SlideFurtherReading },
+  { id: 'save-the-date',    Component: SlideSaveTheDate },
 
   // 講師紹介
-  { id: 'speaker-profile', Component: Slide44 },
-  { id: 'speakers-panel', Component: Slide45 },
+  { id: 'speaker-profile',  Component: SlideSpeakerProfile },
+  { id: 'speakers-panel',   Component: SlideSpeakersPanel },
 ];
 
 export type SlideId = (typeof slideRegistry)[number]['id'];
