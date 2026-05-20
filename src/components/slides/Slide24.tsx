@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
+import { useCountUp } from '@/hooks/useCountUp';
 
 // TODO: 1 つの数字で勝負するスライド。値・単位・キャッチコピーを書き換え
 const STAT = {
@@ -15,28 +16,10 @@ const STAT = {
   accent: '#88bbff',
 };
 
-function useCountUp(target: number, duration = 1.8, start = true) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let raf: number;
-    const t0 = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - t0) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - t, 4);
-      setValue(target * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration, start]);
-  return value;
-}
-
 export default function Slide24() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
-  const v = useCountUp(STAT.value, 1.8, inView);
+  const v = useCountUp(STAT.value, { duration: 1.8, start: inView, easePower: 4 });
 
   return (
     <SlideWrapper>

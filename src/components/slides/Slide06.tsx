@@ -1,27 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
-
-// ─── Count-up hook ──────────────────────────────────────────────────────────
-function useCountUp(target: number, duration = 1.6, start = true) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let raf: number;
-    const t0 = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - t0) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setValue(target * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration, start]);
-  return value;
-}
+import { useCountUp } from '@/hooks/useCountUp';
 
 // ─── Metric card ────────────────────────────────────────────────────────────
 type MetricProps = {
@@ -49,7 +31,7 @@ function Metric({
   accent,
   delay,
 }: MetricProps) {
-  const current = useCountUp(value, 1.6, start);
+  const current = useCountUp(value, { duration: 1.6, start });
   const formatted = current.toLocaleString('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,

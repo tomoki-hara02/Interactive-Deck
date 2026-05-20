@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
+import { useCountUp } from '@/hooks/useCountUp';
 
 type Row = {
   label: string;
@@ -20,26 +21,8 @@ const ROWS: Row[] = [
   { label: 'タスク E', value: 76, unit: '%', accent: '#f7c46c' },
 ];
 
-function useCountUp(target: number, ms: number, start: boolean) {
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    const t0 = performance.now();
-    let raf: number;
-    const tick = (now: number) => {
-      const t = Math.min((now - t0) / ms, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setV(target * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, ms, start]);
-  return v;
-}
-
 function Bar({ row, start, delay }: { row: Row; start: boolean; delay: number }) {
-  const v = useCountUp(row.value, 1500, start);
+  const v = useCountUp(row.value, { duration: 1.5, start });
 
   return (
     <motion.div
