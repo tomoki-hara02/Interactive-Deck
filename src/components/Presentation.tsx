@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DeckBackground } from './backgrounds';
+import TableOfContents from './TableOfContents';
 import { slideRegistry } from '@/config/slides';
 import { BG_COLOR } from '@/theme/colors';
 
@@ -15,6 +16,7 @@ const slideVariants = {
 export default function Presentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [tocOpen, setTocOpen] = useState(false);
 
   const slideCount = slideRegistry.length;
 
@@ -28,16 +30,27 @@ export default function Presentation() {
     setCurrentSlide((prev) => Math.max(prev - 1, 0));
   }, []);
 
+  const goTo = useCallback(
+    (index: number) => {
+      setDirection(index > currentSlide ? 1 : -1);
+      setCurrentSlide(index);
+    },
+    [currentSlide]
+  );
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // TOC が開いているときは矢印ナビを無効化
+      if (tocOpen) return;
       if (e.key === 'ArrowRight' || e.key === ' ') goNext();
       if (e.key === 'ArrowLeft') goPrev();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goNext, goPrev]);
+  }, [goNext, goPrev, tocOpen]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (tocOpen) return;
     const midpoint = window.innerWidth / 2;
     if (e.clientX > midpoint) {
       goNext();
@@ -55,9 +68,10 @@ export default function Presentation() {
       style={{ backgroundColor: BG_COLOR }}
       onClick={handleClick}
     >
-      {/* グローバル背景。スライドの `background` メタが null/undefined のときは非表示。 */}
+      {/* グローバル背景 */}
       <DeckBackground variant={entry.background ?? null} />
 
+      {/* スライド本体 */}
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={currentSlide}
@@ -73,6 +87,15 @@ export default function Presentation() {
         </motion.div>
       </AnimatePresence>
 
+      {/* ── 目次（左上トリガー + オーバーレイ） ── */}
+      <TableOfContents
+        entries={slideRegistry}
+        currentIndex={currentSlide}
+        onNavigate={goTo}
+        isOpen={tocOpen}
+        onToggle={() => setTocOpen((v) => !v)}
+      />
+
       {/* Slide number indicator */}
       <div className="fixed bottom-8 right-8 z-20 flex items-center gap-3">
         {slideRegistry.map((s, i) => (
@@ -80,8 +103,7 @@ export default function Presentation() {
             key={s.id}
             onClick={(e) => {
               e.stopPropagation();
-              setDirection(i > currentSlide ? 1 : -1);
-              setCurrentSlide(i);
+              goTo(i);
             }}
             className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
               i === currentSlide
