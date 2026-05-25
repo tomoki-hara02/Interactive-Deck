@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import type { DeckBackgroundVariant } from '@/components/backgrounds';
 
 import TitleHero       from '@/components/slides/TitleHero';
+import DeckOverview    from '@/components/slides/DeckOverview';
 import FeatureCards    from '@/components/slides/FeatureCards';
 import CTA             from '@/components/slides/CTA';
 import TriangleDiagram from '@/components/slides/TriangleDiagram';
@@ -11,6 +12,7 @@ import KnowledgeGraph  from '@/components/slides/KnowledgeGraph';
 import LiveInference   from '@/components/slides/LiveInference';
 import ParticleText    from '@/components/slides/ParticleText';
 import CardCarousel    from '@/components/slides/CardCarousel';
+import CardWheel       from '@/components/slides/CardWheel';
 import Timeline        from '@/components/slides/Timeline';
 import BeforeAfter     from '@/components/slides/BeforeAfter';
 import TwoAxisMatrix   from '@/components/slides/TwoAxisMatrix';
@@ -75,6 +77,7 @@ export interface SlideEntry {
  */
 export const slideRegistry: SlideEntry[] = [
   { id: 'title',            Component: TitleHero,      background: 'morph',         note: 'タイトル' },
+  { id: 'deck-overview',    Component: DeckOverview,                                 note: 'アジェンダ一覧（固定）' },
   { id: 'logo-particles',   Component: LogoParticles,  note: 'ロゴパーティクル' },
   { id: 'office-intro',     Component: OfficeIntro,    background: 'logoParticles', note: '事務所紹介（固定）' },
   { id: 'speaker-hero',     Component: SpeakerHero,                                 note: '講師紹介（固定）' },
@@ -87,6 +90,7 @@ export const slideRegistry: SlideEntry[] = [
   { id: 'live-inference',   Component: LiveInference },
   { id: 'particle-text',    Component: ParticleText },
   { id: 'card-carousel',    Component: CardCarousel },
+  { id: 'card-wheel',       Component: CardWheel,      note: 'カードホイール（反時計回り）' },
   { id: 'timeline',         Component: Timeline },
   { id: 'before-after',     Component: BeforeAfter },
   { id: 'matrix',           Component: TwoAxisMatrix },

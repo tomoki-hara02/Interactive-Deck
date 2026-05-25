@@ -6,6 +6,7 @@ import { DeckBackground } from './backgrounds';
 import TableOfContents from './TableOfContents';
 import { slideRegistry } from '@/config/slides';
 import { BG_COLOR } from '@/theme/colors';
+import { PresentationContext } from '@/context/presentation';
 
 const slideVariants = {
   enter: { opacity: 0 },
@@ -63,6 +64,7 @@ export default function Presentation() {
   const CurrentSlideComponent = entry.Component;
 
   return (
+    <PresentationContext.Provider value={{ currentSlide, goTo }}>
     <div
       className="relative w-screen h-screen overflow-hidden cursor-pointer select-none"
       style={{ backgroundColor: BG_COLOR }}
@@ -148,5 +150,6 @@ export default function Presentation() {
         </button>
       )}
     </div>
+    </PresentationContext.Provider>
   );
 }
