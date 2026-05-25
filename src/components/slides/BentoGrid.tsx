@@ -20,7 +20,7 @@ export default function BentoGrid() {
         <div className="flex items-end justify-between gap-4 shrink-0">
           <div className="flex flex-col gap-2">
             <span className="text-[10px] tracking-[0.32em] uppercase text-white/40">
-              Overview
+              BentoGrid
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
               {/* TODO: 全体像セクションのタイトル */}

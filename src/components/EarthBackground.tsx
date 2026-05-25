@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import * as THREE from 'three';
+import { mulberry32 } from '@/lib/random';
 
 function Earth() {
   const groupRef = useRef<THREE.Group>(null);
@@ -127,6 +128,9 @@ function OrbitDots({
     return geo;
   }, [count, radius]);
 
+  // unmount / 依存変化で GPU バッファを解放（GPU メモリリーク対策）
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
   useFrame(({ clock }) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = clock.getElapsedTime() * speed;
@@ -146,6 +150,7 @@ function AmbientParticles({ count = 300 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
 
   const geometry = useMemo(() => {
+    const rand = mulberry32(0xa1b2c3 ^ count);
     const geo = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
@@ -155,13 +160,13 @@ function AmbientParticles({ count = 300 }: { count?: number }) {
       new THREE.Color('#FF6B9D'),
     ];
     for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 4 + Math.random() * 6;
+      const theta = rand() * Math.PI * 2;
+      const phi = Math.acos(2 * rand() - 1);
+      const r = 4 + rand() * 6;
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);
-      const c = palette[Math.floor(Math.random() * palette.length)];
+      const c = palette[Math.floor(rand() * palette.length)];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;
@@ -170,6 +175,9 @@ function AmbientParticles({ count = 300 }: { count?: number }) {
     geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     return geo;
   }, [count]);
+
+  // unmount / 依存変化で GPU バッファを解放
+  useEffect(() => () => geometry.dispose(), [geometry]);
 
   useFrame(({ clock }) => {
     if (pointsRef.current) {

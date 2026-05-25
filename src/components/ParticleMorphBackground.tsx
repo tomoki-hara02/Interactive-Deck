@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js';
+import { mulberry32 } from '@/lib/random';
 
 const COUNT = 7000;
 const SHAPE_DURATION = 3.5; // seconds per shape
@@ -88,10 +89,15 @@ function sampleSurface(geo: THREE.BufferGeometry, scale: number): Float32Array {
 }
 
 // ─── Particle mesh ────────────────────────────────────────────────────────────
+// material は `<shaderMaterial ref={...} />` として JSX 宣言する。
+// React 19 では useMemo / useRef の戻り値を render 中に読み取り・mutate
+// するのが禁止のため、ref 経由のアクセスは useFrame の中だけに閉じる。
 function MorphingParticles() {
   const groupRef = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
 
-  const { geo, mat } = useMemo(() => {
+  const geo = useMemo(() => {
+    const rand = mulberry32(0x5e6d12);
     const S = 2.0; // world-space scale
 
     // Sample each shape surface
@@ -113,7 +119,7 @@ function MorphingParticles() {
 
     const colors = new Float32Array(COUNT * 3);
     for (let i = 0; i < COUNT; i++) {
-      const r = Math.random();
+      const r = rand();
       const ci = thresholds.findIndex((t) => r < t);
       const c  = palette[ci] ?? palette[0];
       colors[i * 3]     = c[0];
@@ -129,20 +135,21 @@ function MorphingParticles() {
     geo.setAttribute('aPos3',    new THREE.BufferAttribute(p3, 3));
     geo.setAttribute('aColor',   new THREE.BufferAttribute(colors, 3));
 
-    const mat = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uTime: { value: 0 },
-        uSize: { value: 14.0 }, // tune: bigger = larger points
-      },
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    });
-
-    return { geo, mat };
+    return geo;
   }, []);
+
+  // unmount で GPU バッファを解放（shaderMaterial は r3f が自動 dispose する）
+  useEffect(() => () => geo.dispose(), [geo]);
+
+  // uniforms オブジェクトは ShaderMaterial インスタンス内で共有されるため、
+  // 毎フレーム値が書き換わっても問題ない。生成は useMemo で一度だけ。
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uSize: { value: 14.0 },
+    }),
+    [],
+  );
 
   useFrame(({ clock }) => {
     if (groupRef.current) {
@@ -151,12 +158,26 @@ function MorphingParticles() {
       groupRef.current.rotation.x =
         Math.sin(clock.getElapsedTime() * 0.18) * 0.10;
     }
-    mat.uniforms.uTime.value = clock.getElapsedTime();
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = clock.getElapsedTime();
+    }
   });
 
   return (
     <group ref={groupRef}>
-      <points geometry={geo} material={mat} />
+      <points>
+        <primitive object={geo} attach="geometry" />
+        <shaderMaterial
+          ref={matRef}
+          attach="material"
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
     </group>
   );
 }
@@ -166,12 +187,13 @@ function DustField({ count = 400 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
 
   const geo = useMemo(() => {
+    const rand = mulberry32(0xd05710 ^ count);
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi   = Math.acos(2 * Math.random() - 1);
-      const r     = 5 + Math.random() * 6;
+      const theta = rand() * Math.PI * 2;
+      const phi   = Math.acos(2 * rand() - 1);
+      const r     = 5 + rand() * 6;
       pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
@@ -179,6 +201,8 @@ function DustField({ count = 400 }: { count?: number }) {
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     return g;
   }, [count]);
+
+  useEffect(() => () => geo.dispose(), [geo]);
 
   useFrame(({ clock }) => {
     if (pointsRef.current) {

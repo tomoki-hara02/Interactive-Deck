@@ -45,7 +45,9 @@ import NextSteps       from '@/components/slides/NextSteps';
 import FurtherReading  from '@/components/slides/FurtherReading';
 import SaveTheDate     from '@/components/slides/SaveTheDate';
 import SpeakerProfile  from '@/components/slides/SpeakerProfile';
+import SpeakerHero     from '@/components/slides/SpeakerHero';
 import SpeakersPanel   from '@/components/slides/SpeakersPanel';
+import OfficeIntro     from '@/components/slides/OfficeIntro';
 
 export interface SlideEntry {
   /** 一意の slug。URL ハッシュやアナリティクス用 */
@@ -72,8 +74,10 @@ export interface SlideEntry {
  * 「何が・どんな順で・どんな背景で出るか」が分かるようにしてあります。
  */
 export const slideRegistry: SlideEntry[] = [
-  { id: 'title',            Component: TitleHero,      background: 'morph', note: 'タイトル' },
+  { id: 'title',            Component: TitleHero,      background: 'morph',         note: 'タイトル' },
   { id: 'logo-particles',   Component: LogoParticles,  note: 'ロゴパーティクル' },
+  { id: 'office-intro',     Component: OfficeIntro,    background: 'logoParticles', note: '事務所紹介（固定）' },
+  { id: 'speaker-hero',     Component: SpeakerHero,                                 note: '講師紹介（固定）' },
   { id: 'feature-cards',    Component: FeatureCards },
   { id: 'cta',              Component: CTA },
   { id: 'triangle',         Component: TriangleDiagram },
@@ -122,7 +126,7 @@ export const slideRegistry: SlideEntry[] = [
   { id: 'further-reading',  Component: FurtherReading },
   { id: 'save-the-date',    Component: SaveTheDate },
 
-  // 講師紹介
+  // 講師紹介 / プロフィール系
   { id: 'speaker-profile',  Component: SpeakerProfile },
   { id: 'speakers-panel',   Component: SpeakersPanel },
 ];

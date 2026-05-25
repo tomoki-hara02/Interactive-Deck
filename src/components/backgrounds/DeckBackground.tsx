@@ -27,6 +27,10 @@ const BACKGROUNDS = {
   particles: dynamic(() => import('../ParticleBackground'), { ssr: false }),
   /** 地球 + 軌道リング 3D */
   earth: dynamic(() => import('../EarthBackground'), { ssr: false }),
+  /** ロゴパーティクル（散らばる → ロゴ形成 → 散らばる…のループ） */
+  logoParticles: dynamic(() => import('../LogoParticlesBackground'), {
+    ssr: false,
+  }),
 } as const;
 
 export type DeckBackgroundVariant = keyof typeof BACKGROUNDS;

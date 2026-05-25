@@ -1,10 +1,11 @@
 ﻿'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
+import { mulberry32 } from '@/lib/random';
 
 // ─── Wireframe cube with glowing inner volume ───────────────────────────────
 function GlowCube() {
@@ -67,6 +68,7 @@ function ParticleHalo({ count = 1500 }: { count?: number }) {
   const ref = useRef<THREE.Points>(null);
 
   const geo = useMemo(() => {
+    const rand = mulberry32(0xc7b3e0 ^ count);
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
@@ -76,9 +78,9 @@ function ParticleHalo({ count = 1500 }: { count?: number }) {
       new THREE.Color('#ffaacc'),
     ];
     for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 2.5 + Math.random() * 1.8;
+      const theta = rand() * Math.PI * 2;
+      const phi = Math.acos(2 * rand() - 1);
+      const r = 2.5 + rand() * 1.8;
       pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
@@ -89,6 +91,8 @@ function ParticleHalo({ count = 1500 }: { count?: number }) {
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     return g;
   }, [count]);
+
+  useEffect(() => () => geo.dispose(), [geo]);
 
   useFrame(({ clock }) => {
     if (ref.current) {

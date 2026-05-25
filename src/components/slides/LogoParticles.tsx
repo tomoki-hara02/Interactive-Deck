@@ -5,6 +5,16 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import SlideWrapper from '../SlideWrapper';
+import { mulberry32 } from '@/lib/random';
+
+// useMemo の geo を unmount で dispose するためのヘルパー hook
+function useDisposable<T extends { dispose: () => void } | null>(value: T): void {
+  useEffect(() => {
+    return () => {
+      value?.dispose();
+    };
+  }, [value]);
+}
 
 // ─── 設定 ───────────────────────────────────────────────────────────────────
 // TODO: ロゴ画像（public/ 配下に置く）
@@ -110,11 +120,26 @@ function sampleLogo(img: HTMLImageElement, drawW: number, drawH: number, step: n
 }
 
 // ─── パーティクルメッシュ ────────────────────────────────────────────────
+// material は `<shaderMaterial ref={...} />` として JSX 宣言する
+// （React 19 の react-hooks/refs ルールにより、render 中に
+// ref.current を読み取ることが禁止されているため）。
 function ParticlesMesh({ samples }: { samples: Sample[] }) {
   const groupRef = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
 
-  const data = useMemo(() => {
+  // uniforms オブジェクトは ShaderMaterial に渡したあと、毎フレーム値だけ更新する。
+  const uniforms = useMemo(
+    () => ({
+      uTime:  { value: 0 },
+      uSize:  { value: 16.0 },
+      uCycle: { value: CYCLE_S },
+    }),
+    [],
+  );
+
+  const geo = useMemo(() => {
     if (samples.length === 0) return null;
+    const rand = mulberry32(0xa5e9c1 ^ samples.length);
 
     // ロゴの bounding box を計測（中心揃え＆ワールドスケール用）
     let maxX = 0, maxY = 0;
@@ -128,7 +153,7 @@ function ParticlesMesh({ samples }: { samples: Sample[] }) {
     // ピクセル走査は上から順なので、シャッフルしてから粒子に対応付ける
     const shuffled = samples.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(rand() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
@@ -142,12 +167,12 @@ function ParticlesMesh({ samples }: { samples: Sample[] }) {
       // ロゴ目標位置（XY 平面・Y を反転＝Canvas 座標 → ワールド座標）
       targetBuf[i * 3 + 0] =  (s.x - maxX / 2) * SCALE;
       targetBuf[i * 3 + 1] = -(s.y - maxY / 2) * SCALE;
-      targetBuf[i * 3 + 2] = (Math.random() - 0.5) * 0.08; // 極小 Z ノイズで奥行き感
+      targetBuf[i * 3 + 2] = (rand() - 0.5) * 0.08; // 極小 Z ノイズで奥行き感
 
       // 散らばった状態：球殻にランダム配置
-      const theta = Math.random() * Math.PI * 2;
-      const phi   = Math.acos(2 * Math.random() - 1);
-      const r     = 3.8 + Math.random() * 2.6;
+      const theta = rand() * Math.PI * 2;
+      const phi   = Math.acos(2 * rand() - 1);
+      const r     = 3.8 + rand() * 2.6;
       scatterBuf[i * 3 + 0] = r * Math.sin(phi) * Math.cos(theta);
       scatterBuf[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       scatterBuf[i * 3 + 2] = r * Math.cos(phi);
@@ -165,31 +190,21 @@ function ParticlesMesh({ samples }: { samples: Sample[] }) {
       }
     }
 
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(targetBuf, 3));
-    geo.setAttribute('aScatter', new THREE.BufferAttribute(scatterBuf, 3));
-    geo.setAttribute('aColor',   new THREE.BufferAttribute(colorBuf, 3));
+    const buffer = new THREE.BufferGeometry();
+    buffer.setAttribute('position', new THREE.BufferAttribute(targetBuf, 3));
+    buffer.setAttribute('aScatter', new THREE.BufferAttribute(scatterBuf, 3));
+    buffer.setAttribute('aColor',   new THREE.BufferAttribute(colorBuf, 3));
 
-    const mat = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uTime:  { value: 0 },
-        uSize:  { value: 16.0 },
-        uCycle: { value: CYCLE_S },
-      },
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    });
-
-    return { geo, mat };
+    return buffer;
   }, [samples]);
+
+  // samples 変更 / unmount 時に GPU バッファを解放
+  useDisposable(geo);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
-    if (data) {
-      data.mat.uniforms.uTime.value = t;
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = t;
     }
     if (groupRef.current) {
       // Slide19 のキューブと同様、3 軸でゆっくりタンブル
@@ -199,23 +214,39 @@ function ParticlesMesh({ samples }: { samples: Sample[] }) {
     }
   });
 
-  if (!data) return null;
+  if (!geo) return null;
 
   return (
     <group ref={groupRef}>
-      <points geometry={data.geo} material={data.mat} />
+      <points>
+        <primitive object={geo} attach="geometry" />
+        <shaderMaterial
+          ref={matRef}
+          attach="material"
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
     </group>
   );
 }
 
-// ─── スライド本体 ────────────────────────────────────────────────────────
-export default function LogoParticles() {
+// ─── 共通シーン（Canvas のみ） ──────────────────────────────────────────
+// `LogoParticles` スライドと `LogoParticlesBackground`（背景レイヤー）の
+// 両方から再利用される。テキストオーバーレイは含まない。
+export function LogoParticlesScene() {
   const [samples, setSamples] = useState<Sample[]>([]);
 
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
+    let cancelled = false;
     img.onload = () => {
+      if (cancelled) return;
       // 中解像度でサンプリング（細かすぎても粒子数で頭打ちなので 280px 程度で十分）
       const maxDim  = 280;
       const aspect  = img.width / img.height;
@@ -224,6 +255,7 @@ export default function LogoParticles() {
       setSamples(sampleLogo(img, drawW, drawH, 2));
     };
     img.onerror = () => {
+      if (cancelled) return;
       // フォールバック：円形の点群
       const fallback: Sample[] = [];
       const dim = 200;
@@ -240,20 +272,30 @@ export default function LogoParticles() {
       setSamples(fallback);
     };
     img.src = LOGO_SRC;
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
+    <Canvas
+      camera={{ position: [0, 0, 6], fov: 50 }}
+      gl={{ antialias: true, alpha: false }}
+      style={{ background: '#0a0a0f' }}
+    >
+      <color attach="background" args={['#0a0a0f']} />
+      <ParticlesMesh samples={samples} />
+    </Canvas>
+  );
+}
+
+// ─── スライド本体 ────────────────────────────────────────────────────────
+export default function LogoParticles() {
+  return (
     <SlideWrapper>
-      {/* 3D Canvas（Slide19 と同じ構成） */}
+      {/* 3D Canvas */}
       <div className="absolute inset-0">
-        <Canvas
-          camera={{ position: [0, 0, 6], fov: 50 }}
-          gl={{ antialias: true, alpha: false }}
-          style={{ background: '#0a0a0f' }}
-        >
-          <color attach="background" args={['#0a0a0f']} />
-          <ParticlesMesh samples={samples} />
-        </Canvas>
+        <LogoParticlesScene />
       </div>
 
       {/* 上部キャプション */}

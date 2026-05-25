@@ -20,11 +20,21 @@ const TOKEN_MS = 60;
 const PROMPT_MS = 38;
 
 // ─── Typewriter helpers ─────────────────────────────────────────────────────
+// React 19 の react-hooks/set-state-in-effect ルールに従い、依存値変化時の
+// state リセットは render 中で実施（React 公式の "storing information from
+// previous renders" パターン）。setInterval は依存値変化時に effect cleanup で
+// 解除されるため、新しい text/tokens 用の interval が改めて起動する。
 function useTypewriter(text: string, ms: number, start: boolean) {
   const [out, setOut] = useState('');
+  const [prev, setPrev] = useState({ text, start });
+
+  if (prev.text !== text || prev.start !== start) {
+    setPrev({ text, start });
+    setOut('');
+  }
+
   useEffect(() => {
     if (!start) return;
-    setOut('');
     let i = 0;
     const id = setInterval(() => {
       i++;
@@ -38,9 +48,15 @@ function useTypewriter(text: string, ms: number, start: boolean) {
 
 function useTokenStream(tokens: string[], ms: number, start: boolean) {
   const [count, setCount] = useState(0);
+  const [prev, setPrev] = useState({ tokens, start });
+
+  if (prev.tokens !== tokens || prev.start !== start) {
+    setPrev({ tokens, start });
+    setCount(0);
+  }
+
   useEffect(() => {
     if (!start) return;
-    setCount(0);
     let i = 0;
     const id = setInterval(() => {
       i++;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useId, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { SlideEntry } from '@/config/slides';
 
@@ -36,14 +36,8 @@ const CATEGORIES: CategoryBoundary[] = [
   { fromIndex: 21, label: 'Extra Materials' },
   { fromIndex: 31, label: 'Dev Tools' },
   { fromIndex: 38, label: 'Endings' },
-  { fromIndex: 43, label: 'Speaker Intro' },
+  { fromIndex: 43, label: 'Speaker · Office' },
 ];
-
-function categoryAt(index: number): string | null {
-  // 境界の最初だけラベルを返す
-  const found = CATEGORIES.find((c) => c.fromIndex === index);
-  return found ? found.label : null;
-}
 
 // ─── props ────────────────────────────────────────────────────────────────────
 
@@ -64,6 +58,12 @@ export default function TableOfContents({
   isOpen,
   onToggle,
 }: TableOfContentsProps) {
+  const dialogId = useId();
+  const dialogTitleId = `${dialogId}-title`;
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   // Escape でパネルを閉じる
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
@@ -76,15 +76,53 @@ export default function TableOfContents({
     return () => window.removeEventListener('keydown', handleKey);
   }, [handleKey]);
 
+  // パネル開閉時のフォーカス管理（accessibility）
+  // - 開いたら最初のフォーカス可能要素（× ボタン）にフォーカス
+  // - 閉じたらトリガーボタンに戻す
+  useEffect(() => {
+    if (isOpen) {
+      // モーション完了を待ってからフォーカス
+      const t = setTimeout(() => closeButtonRef.current?.focus(), 50);
+      return () => clearTimeout(t);
+    }
+    triggerRef.current?.focus();
+  }, [isOpen]);
+
+  // パネル内に Tab フォーカスを閉じ込める（focus trap）
+  const handleTrapTab = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      const focusables = panelRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    },
+    []
+  );
+
   return (
     <>
       {/* ── Trigger button（左上固定）── */}
       <button
+        ref={triggerRef}
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           onToggle();
         }}
-        aria-label="目次を開く"
+        aria-label={isOpen ? '目次を閉じる' : '目次を開く'}
+        aria-expanded={isOpen}
+        aria-controls={dialogId}
         className={`fixed top-6 left-6 z-30 flex items-center gap-2 px-3 py-2 rounded-xl
           border transition-all duration-200 text-xs font-medium tracking-wide
           ${
@@ -94,7 +132,7 @@ export default function TableOfContents({
           }`}
       >
         {/* Grid icon */}
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
           <rect x="1" y="1" width="6" height="6" rx="1" />
           <rect x="9" y="1" width="6" height="6" rx="1" />
           <rect x="1" y="9" width="6" height="6" rx="1" />
@@ -119,11 +157,17 @@ export default function TableOfContents({
                 e.stopPropagation();
                 onToggle();
               }}
+              aria-hidden="true"
             />
 
             {/* パネル本体 */}
             <motion.div
               key="toc-panel"
+              ref={panelRef}
+              id={dialogId}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={dialogTitleId}
               className="fixed inset-x-0 top-0 bottom-0 z-50 flex flex-col"
               style={{ maxWidth: 960, margin: '0 auto' }}
               initial={{ opacity: 0, y: -24 }}
@@ -131,11 +175,15 @@ export default function TableOfContents({
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={handleTrapTab}
             >
               {/* ヘッダー */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 shrink-0">
                 <div className="flex items-center gap-3">
-                  <span className="text-white font-semibold tracking-tight text-lg">
+                  <span
+                    id={dialogTitleId}
+                    className="text-white font-semibold tracking-tight text-lg"
+                  >
                     Template Slides
                   </span>
                   <span className="text-[11px] text-white/30 font-mono">
@@ -143,14 +191,16 @@ export default function TableOfContents({
                   </span>
                 </div>
                 <button
+                  ref={closeButtonRef}
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggle();
                   }}
                   className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                  aria-label="閉じる"
+                  aria-label="目次を閉じる"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" d="M18 6L6 18M6 6l12 12" />
                   </svg>
                 </button>
@@ -176,10 +226,13 @@ export default function TableOfContents({
                           return (
                             <button
                               key={entry.id}
+                              type="button"
                               onClick={() => {
                                 onNavigate(globalIdx);
                                 onToggle();
                               }}
+                              aria-current={isCurrent ? 'page' : undefined}
+                              aria-label={`スライド ${globalIdx + 1}: ${name}`}
                               className={`group relative flex flex-col items-start gap-1.5 p-3 rounded-xl
                                 border text-left transition-all duration-150
                                 ${
